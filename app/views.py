@@ -11,7 +11,8 @@ def jobsignin(request):
       email = request.POST.get('email')
       password = request.POST.get('password')
       confirm_password = request.POST.get('confirm_password')
-      skills = request.POST.get('skills')
+      skills = request.POST.getlist('skills')
+      skills = [s.strip().lower() for s in skills if s.strip()]
       experience = request.POST.get('experience')
       resume = request.FILES.get('resume')
       extension = resume.name
@@ -31,11 +32,8 @@ def jobsignin(request):
 def companysignin(request):
    if request.method == "POST":
       name = request.POST.get('name')
-      print("got name",name)
       email = request.POST.get('email')
-      print("got name",email)
       password = request.POST.get('password')
-      print("got name",password)
       confirm_password = request.POST.get('confirm_password')
       about_company = request.POST.get("about-company")
       if confirm_password  == password:
@@ -46,5 +44,8 @@ def companysignin(request):
       company.objects.create(user=new_user,about_company=about_company)
    
    return render(request,'app/postsignup.html')   
+
+def login(request):
+   return render(request,'app/login.html')
 
        
