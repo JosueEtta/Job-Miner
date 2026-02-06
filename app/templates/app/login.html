@@ -15,6 +15,7 @@
 </head>
 <body class="bg-center bg-cover h-screen">
    
+   <div class="text-red-500 text-xl">{{ errormessage }}</div>
    <section class="sm:fixed sm:mx-auto sm:mt-1 md:absolute md:right-5 flex flex-col md:p-3 bg-white outline-none md:mt-5 xl:mt-35 rounded-md pb-5 z-10">
        <div class="container flex flex-col items-center justify-center px-6">
            <!-- Login Form -->
@@ -30,7 +31,7 @@
                     </svg>
                 </span>
 
-                <input type="email" name="Email" class="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11 focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40" placeholder="Email">
+                <input type="email" name="Email" class="block w-full py-3 text-gray-700 bg-white border rounded-lg px-11 focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40" placeholder="Email" required>
             </div>
 
             <div class="relative flex items-center mt-6">
@@ -40,10 +41,10 @@
                     </svg>
                 </span>
 
-                <input type="password" name="password" class="block w-full px-10 py-3 text-gray-700 bg-white border rounded-lg focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40" placeholder="Password">
+                <input type="password" name="password" class="block w-full px-10 py-3 text-gray-700 bg-white border rounded-lg focus:border-blue-400 focus:ring-blue-300 focus:outline-none focus:ring focus:ring-opacity-40" placeholder="Password" required>
             </div>
 
-            <div class="flex items-center justify-between mt-6">
+            <div class="text-center mt-6">
                 <a href="#" class="text-sm text-blue-500 hover:underline">
                     Forgot Password?
                 </a>
@@ -54,11 +55,7 @@
                     Sign In
                 </button>
 
-                <div class="mt-6 text-center">
-                    <a href="#" class="text-sm text-blue-500 hover:underline">
-                        Don't have an account?
-                    </a>
-                </div>
+
             </div>
         </form>
     </section>
