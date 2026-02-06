@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate,login
+from django.contrib.auth.hashers import make_password
 from django.shortcuts import render, redirect
 from app.models import jobseeker,user,company
 from django.http import HttpResponse
@@ -12,7 +13,7 @@ def home(request):
 
 def jobsignin(request):
     if request.method == "POST":
-      name = request.POST.get('name')
+      username = request.POST.get('name')
       email = request.POST.get('email')
       password = request.POST.get('password')
       confirm_password = request.POST.get('confirm_password')
@@ -23,9 +24,9 @@ def jobsignin(request):
       extension = resume.name
       extension = extension.split(".")[-1]
       if extension == "docx":
-        resume.name = name+".docx"
+        resume.name = username+".docx"
       elif extension == "pdf":  
-          resume.name = name+".pdf"
+          resume.name = username+".pdf"
       
       #check if user email exist
       if user.objects.filter(email__iexact=email,role="job seeker").exists():
@@ -34,9 +35,10 @@ def jobsignin(request):
       else:
        #check password
        if confirm_password  == password:
-        new_user= user.objects.create(name=name,email=email,password=password,role="job seeker")
+        hashed_password = make_password(password)
+        new_user= user.objects.create_user(username=username,email=email,password=password,role="job seeker")
         new_user.save()
-        jobseeker.objects.create(user=new_user,jobseeker_name=name,skills=skills,experience=experience,resume=resume)
+        jobseeker.objects.create(user=new_user,jobseeker_name=username,skills=skills,experience=experience,resume=resume)
         return redirect("home")
        else:
          return render(request,'app/jobsignup.html',{"question":"Passwords don't match"})
@@ -45,7 +47,7 @@ def jobsignin(request):
 def companysignin(request):
    if request.method == "POST":
       #get request input
-      name = request.POST.get('name')
+      username = request.POST.get('name')
       useremail = request.POST.get('email')
       password = request.POST.get('password')
       confirm_password = request.POST.get('confirm_password')
@@ -58,7 +60,8 @@ def companysignin(request):
       else:
        #check password
        if confirm_password  == password:
-        new_user= user.objects.create(name=name,email=useremail,password=password,role="company")
+      #   hashed_password = make_password(password)
+        new_user= user.objects.create_user(username=username,email=useremail,password=password,role="company")
         new_user.save()
         company.objects.create(user=new_user,about_company=about_company)
         return redirect("home")
@@ -69,13 +72,14 @@ def companysignin(request):
 
 def loginuser(request):
    if request.method == "POST":
-      useremail = request.POST.get("email")
-      userpassword = request.POST.get("password")
-      authuser = authenticate(request,email="digimark@gmail.com",password = "hi")
+      user_email = request.POST.get("email")
+      user_password = request.POST.get("password")
+      print(user_email,user_password)
+      authuser = authenticate(request,email=user_email,password=user_password)
       print(authuser)
       if authuser is not None:
           login(request,authuser)
-          return render(request,"app/index.html")
+          return redirect("home")
       else:
          return render(request,'app/login.html',{"errormessage":"Invalid credentials"})
    return render(request,'app/login.html')

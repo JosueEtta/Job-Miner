@@ -4,16 +4,12 @@ from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 
-class user(models.Model):
-  name = models.CharField(max_length=50)
-  password = models.CharField(max_length=50)
+class user(AbstractUser):
   email = models.EmailField(unique=True)
   role = models.CharField(max_length=50)
-  is_anonymous = models.BooleanField(default=False)
-  is_authenticated = models.BooleanField(default=False)
   
   USERNAME_FIELD = "email"
-  REQUIRED_FIELDS = ["name","password","role"]
+  REQUIRED_FIELDS = ["username","role"]
       
 
 class jobseeker(models.Model):
