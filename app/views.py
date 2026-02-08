@@ -16,7 +16,9 @@ def jobsignin(request):
       username = request.POST.get('name')
       email = request.POST.get('email')
       password = request.POST.get('password')
+      print("password",password)
       confirm_password = request.POST.get('confirm_password')
+      print("Confirm password",confirm_password)
       skills = request.POST.getlist('skills')
       skills = [s.strip().lower() for s in skills if s.strip()]
       experience = request.POST.get('experience')
