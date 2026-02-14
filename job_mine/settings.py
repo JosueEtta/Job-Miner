@@ -85,9 +85,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'job_miner',
-        'USER': 'postgres',
+        'USER': 'atabe',
         'PASSWORD': 'Software007',
-        'HOST': 'localhost',  # Or the IP address of your DB server
+        'HOST': 'localhost',  # Use 'localhost' instead of ' '
         'PORT': '5432',
     }
     

@@ -8,7 +8,6 @@ from django.http import HttpResponse
 # Create your views here.
 
 def home(request):
-
    return render(request,"app/index.html")
 
 def jobsignin(request):
@@ -33,7 +32,7 @@ def jobsignin(request):
       #check if user email exist
       if user.objects.filter(email__iexact=email,role="job seeker").exists():
          #if exist return User already exist
-         return render(request,'app/jobsignup.html',{"question":"User already exist"})
+         return render(request,'app/jobsignup.html',{"errormessage":"User already exist"})
       else:
        #check password
        if confirm_password  == password:
@@ -43,7 +42,7 @@ def jobsignin(request):
         jobseeker.objects.create(user=new_user,jobseeker_name=username,skills=skills,experience=experience,resume=resume)
         return redirect("home")
        else:
-         return render(request,'app/jobsignup.html',{"question":"Passwords don't match"})
+         return render(request,'app/jobsignup.html',{"errormessage":"Passwords don't match"})
     return render(request, 'app/jobsignup.html')
 
 def companysignin(request):
@@ -58,7 +57,7 @@ def companysignin(request):
       #check if user email exist
       if user.objects.filter(email__iexact=useremail,role="company").exists():
          #if exist return User already exist
-         return render(request,'app/postsignup.html',{"question":"User already exist"})
+         return render(request,'app/postsignup.html',{"errormessage":"User already exist"})
       else:
        #check password
        if confirm_password  == password:
@@ -68,7 +67,7 @@ def companysignin(request):
         company.objects.create(user=new_user,about_company=about_company)
         return redirect("home")
        else:
-         return render(request,'app/postsignup.html',{"question":"Passwords don't match"})
+         return render(request,'app/postsignup.html',{"errormessage":"Passwords don't match"})
    
    return render(request,'app/postsignup.html')   
 
