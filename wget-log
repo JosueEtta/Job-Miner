@@ -1,0 +1,3 @@
+--2026-02-17 18:47:40--  https://update.code.visualstudio.com/commit:c3a26841a84f20dfe0850d0a5a9bd01da4f003ea/server-linux-x64/stable
+Resolving update.code.visualstudio.com (update.code.visualstudio.com)... failed: Temporary failure in name resolution.
+wget: unable to resolve host address ‘update.code.visualstudio.com’

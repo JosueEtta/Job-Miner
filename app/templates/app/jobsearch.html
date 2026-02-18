@@ -1,0 +1,480 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Miner - Find Your Perfect Job</title>
+   <script src="{% static 'src/tailwind.js' %}" defer></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="min-h-screen bg-white">
+
+  <!-- Header -->
+  <header class="border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div class="flex items-center justify-between">
+        <div class="text-2xl font-bold text-blue-600">Job Miner</div>
+
+        <!-- Mobile menu button -->
+        <button id="mobileMenuButton" class="md:hidden p-2 rounded-md text-gray-700 hover:bg-gray-100">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+
+        <nav id="desktopNav" class="hidden md:flex items-center space-x-8">
+          <a href="#" class="text-gray-700 hover:text-blue-600 transition-colors">Popular jobs</a>
+          <a href="#" class="text-gray-700 hover:text-blue-600 transition-colors">Find jobs</a>
+          <a href="#" class="text-gray-700 hover:text-blue-600 transition-colors">Post Jobs</a>
+          <a href="#" class="text-gray-700 hover:text-blue-600 transition-colors">Dashboard</a>
+        </nav>
+
+        <button class="hidden sm:inline-block bg-blue-600 text-white px-4 sm:px-8 py-2.5 rounded-full hover:bg-blue-700 transition-colors">
+          Login
+        </button>
+      </div>
+
+      <!-- Mobile nav (hidden by default) -->
+      <nav id="mobileNav" class="md:hidden mt-3 hidden">
+        <div class="flex flex-col space-y-2">
+          <a href="#" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50">Popular jobs</a>
+          <a href="#" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50">Find jobs</a>
+          <a href="#" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50">Post Jobs</a>
+          <a href="#" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50">Dashboard</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="text-center mb-8">
+      <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+        Find Your Perfect Match For Your Skills
+      </h1>
+      
+      <div class="flex flex-col sm:flex-row gap-3 max-w-2xl mx-auto">
+        <input 
+          type="text" 
+          id="searchInput"
+          placeholder="Job title" 
+          class="flex-1 px-4 sm:px-6 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+        />
+        <button 
+          onclick="applyFilters()"
+          class="bg-blue-600 text-white px-6 sm:px-10 py-3 rounded-full hover:bg-blue-700 transition-colors font-medium"
+        >
+          Search
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-10 md:pb-16 lg:pb-20">
+    <div class="flex flex-col lg:flex-row gap-6 lg:gap-12">
+      
+      <!-- Sidebar Filter -->
+      <aside class="w-full lg:w-80 flex-shrink-0">
+        <div class="bg-white lg:sticky lg:top-24">
+          <!-- Mobile Filter Toggle -->
+          <button id="filterToggleBtn" class="lg:hidden w-full bg-blue-600 text-white rounded-lg px-4 py-3 mb-4 flex items-center justify-between">
+            <span class="text-base font-medium">Filters</span>
+            <svg id="filterToggleIcon" class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </button>
+
+          <div id="filterContent" class="hidden lg:block">
+            <h3 class="text-lg sm:text-xl md:text-2xl text-gray-900 mb-4 md:mb-6 font-medium">
+              Filter
+            </h3>
+
+            <!-- Job Type -->
+            <div class="mb-6 md:mb-8">
+              <h4 class="text-base sm:text-lg md:text-lg text-gray-900 mb-3 md:mb-4 font-medium">
+                Job type
+              </h4>
+              <div class="border-t border-gray-200 pt-4 space-y-3">
+                <label class="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded transition-colors">
+                  <input
+                    type="checkbox"
+                    id="chk-fulltime"
+                    value="Full-time"
+                    class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-600"
+                    onchange="applyFilters()"
+                  />
+                  <span class="text-sm md:text-base text-gray-900">
+                    Full-time
+                  </span>
+                </label>
+                <label class="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded transition-colors">
+                  <input
+                    type="checkbox"
+                    id="chk-parttime"
+                    value="Part-time"
+                    class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-600"
+                    onchange="applyFilters()"
+                  />
+                  <span class="text-sm md:text-base text-gray-900">
+                    Part-time
+                  </span>
+                </label>
+                <label class="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded transition-colors">
+                  <input
+                    type="checkbox"
+                    id="chk-intern"
+                    value="Intern"
+                    class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-600"
+                    onchange="applyFilters()"
+                  />
+                  <span class="text-sm md:text-base text-gray-900">
+                    Intern
+                  </span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Salary -->
+            <div class="mb-6 md:mb-8">
+              <h4 class="text-base sm:text-lg md:text-lg text-gray-900 mb-3 md:mb-4 font-medium">
+                Salary
+              </h4>
+              <div class="border-t border-gray-200 pt-4">
+                <div class="flex flex-col sm:flex-row gap-3 md:gap-4">
+                  <input
+                    type="number"
+                    id="salaryMin"
+                    placeholder="Min"
+                    class="bg-white border border-gray-300 rounded-lg px-3 sm:px-4  flex-1 text-sm md:text-base text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                    onchange="applyFilters()"
+                  />
+                  <input
+                    type="number"
+                    id="salaryMax"
+                    placeholder="Max"
+                    class="bg-white border border-gray-300 rounded-lg px-3 sm:px-4 py-2 flex-1 text-sm md:text-base text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+                    onchange="applyFilters()"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <!-- Experience Level -->
+            <div class="mb-6">
+              <h4 class="text-base sm:text-lg md:text-lg text-gray-900 mb-3 md:mb-4 font-medium">
+                Experience level
+              </h4>
+              <div class="border-t border-gray-200 pt-4 space-y-3">
+                <label class="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded transition-colors">
+                  <input
+                    type="checkbox"
+                    id="chk-fresh"
+                    value="Fresh"
+                    class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-600"
+                    onchange="applyFilters()"
+                  />
+                  <span class="text-sm md:text-base text-gray-900">
+                    Fresh
+                  </span>
+                </label>
+                <label class="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded transition-colors">
+                  <input
+                    type="checkbox"
+                    id="chk-1-2"
+                    value="1-2 years"
+                    class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-600"
+                    onchange="applyFilters()"
+                  />
+                  <span class="text-sm md:text-base text-gray-900">
+                    1-2 years
+                  </span>
+                </label>
+                <label class="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded transition-colors">
+                  <input
+                    type="checkbox"
+                    id="chk-3-5"
+                    value="3-5 years"
+                    class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-600"
+                    onchange="applyFilters()"
+                  />
+                  <span class="text-sm md:text-base text-gray-900">
+                    3-5 years
+                  </span>
+                </label>
+                <label class="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded transition-colors">
+                  <input
+                    type="checkbox"
+                    id="chk-6-8"
+                    value="6-8 years"
+                    class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-600"
+                    onchange="applyFilters()"
+                  />
+                  <span class="text-sm md:text-base text-gray-900">
+                    6-8 years
+                  </span>
+                </label>
+                <label class="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded transition-colors">
+                  <input
+                    type="checkbox"
+                    id="chk-9plus"
+                    value="9+ years"
+                    class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-600"
+                    onchange="applyFilters()"
+                  />
+                  <span class="text-sm md:text-base text-gray-900">
+                    9+ years
+                  </span>
+                </label>
+              </div>
+            </div>
+
+            <!-- Apply Filters Button (Mobile) -->
+            <button class="lg:hidden w-full bg-blue-600 text-white rounded-full px-6 py-2 md:py-3 text-sm md:text-base font-medium hover:bg-blue-700 transition-colors mt-4">
+              Apply Filters
+            </button>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Job Listings -->
+      <main class="flex-1">
+        <div id="jobList" class="space-y-4 md:space-y-6">
+          <!-- Job listings will be dynamically inserted here -->
+        </div>
+        <div id="noResults" class="hidden text-center py-12">
+          <div class="text-5xl mb-4">🔍</div>
+          <p class="text-lg font-bold text-gray-900 mb-1">No jobs found</p>
+          <p class="text-sm text-gray-500">Try adjusting your filters or search term.</p>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-blue-600 text-white py-12 mt-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 md:gap-8 mb-6 md:mb-8">
+        <div class="w-full lg:w-auto">
+          <h3 class="text-2xl sm:text-3xl md:text-2xl font-bold mb-2">
+            Job Miner
+          </h3>
+        </div>
+        
+        <div class="w-full lg:flex-1 lg:text-center">
+          <h4 class="font-medium text-lg sm:text-xl md:text-xl text-white mb-2">
+            Most complete job portal
+          </h4>
+          <p class="text-xs sm:text-sm md:text-base text-blue-100">
+            Sign up to start mining your career gem
+          </p>
+        </div>
+        
+        <div class="flex flex-col sm:flex-row gap-3 md:gap-4 w-full lg:w-auto">
+          <button class="w-full sm:w-auto bg-transparent border-2 border-white text-white rounded-full px-5 sm:px-8 py-2 md:py-3 text-sm sm:text-base md:text-lg font-medium hover:bg-white hover:text-blue-600 transition-colors whitespace-nowrap">
+            Looking for a job
+          </button>
+          <button class="w-full sm:w-auto bg-white text-blue-600 rounded-full px-5 sm:px-8 py-2 md:py-3 text-sm sm:text-base md:text-lg font-medium hover:bg-blue-50 transition-colors whitespace-nowrap">
+            Post a job
+          </button>
+        </div>
+      </div>
+      
+      <div class="border-t border-blue-500 pt-6 text-center">
+        <p class="text-sm sm:text-base md:text-base">&copy; 2024 Job Miner. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ────── Job Data ──────
+    const jobsData = [
+      {
+        id: 1,
+        title: "Jr. Web Developer",
+        company: "Digimark Consulting",
+        type: "Full-time",
+        location: "Remote",
+        salaryMin: 12000,
+        salaryMax: 5000000,
+        salaryLabel: "12000XAF – 5000000XAF",
+        experience: "Fresh",
+        status: "Active"
+      },
+      {
+        id: 2,
+        title: "Sr. UX Designer",
+        company: "Pixel Labs",
+        type: "Full-time",
+        location: "Remote",
+        salaryMin: 80000,
+        salaryMax: 120000,
+        salaryLabel: "$80K – $120K",
+        experience: "3-5 years",
+        status: "Active"
+      },
+      {
+        id: 3,
+        title: "Product Manager",
+        company: "TechNova",
+        type: "Full-time",
+        location: "Hybrid",
+        salaryMin: 90000,
+        salaryMax: 140000,
+        salaryLabel: "$90K – $140K",
+        experience: "6-8 years",
+        status: "Active"
+      },
+      {
+        id: 4,
+        title: "Frontend Engineer",
+        company: "Bright Systems",
+        type: "Part-time",
+        location: "Remote",
+        salaryMin: 40000,
+        salaryMax: 60000,
+        salaryLabel: "$40K – $60K",
+        experience: "1-2 years",
+        status: "Active"
+      },
+      {
+        id: 5,
+        title: "Marketing Intern",
+        company: "Digimark Consulting",
+        type: "Intern",
+        location: "On-site",
+        salaryMin: 8000,
+        salaryMax: 15000,
+        salaryLabel: "8000XAF – 15000XAF",
+        experience: "Fresh",
+        status: "Active"
+      },
+      {
+        id: 6,
+        title: "Backend Developer",
+        company: "CodeNest",
+        type: "Full-time",
+        location: "Remote",
+        salaryMin: 70000,
+        salaryMax: 110000,
+        salaryLabel: "$70K – $110K",
+        experience: "3-5 years",
+        status: "Active"
+      },
+    ];
+
+    // ────── Render Jobs ──────
+    function renderJobs(jobs) {
+      const list = document.getElementById("jobList");
+      const noRes = document.getElementById("noResults");
+      list.innerHTML = "";
+      
+      if (jobs.length === 0) {
+        noRes.classList.remove("hidden");
+        return;
+      }
+      
+      noRes.classList.add("hidden");
+      
+      jobs.forEach(job => {
+        const card = document.createElement("div");
+        card.className = "border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-shadow";
+        card.innerHTML = `
+          <div class="flex items-start gap-4 mb-4">
+            <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
+              <svg class="w-6 h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12z"/>
+              </svg>
+            </div>
+            <div class="flex-1">
+              <div class="flex items-center gap-3 mb-2 flex-wrap">
+                <h3 class="text-lg md:text-xl font-bold text-gray-900">${job.title}</h3>
+                <span class="bg-green-200 text-green-800 px-3 py-1 rounded-full text-xs md:text-sm font-medium">${job.status}</span>
+              </div>
+              <p class="text-gray-600 text-sm md:text-base">by ${job.company}</p>
+            </div>
+          </div>
+          
+          <div class="flex flex-wrap gap-2 mb-4">
+            <span class="bg-blue-200 text-blue-800 px-3 md:px-4 py-1.5 rounded-full text-xs md:text-sm">${job.location}</span>
+            <span class="bg-blue-200 text-blue-800 px-3 md:px-4 py-1.5 rounded-full text-xs md:text-sm">${job.salaryLabel}</span>
+          </div>
+          
+          <a href="#" class="text-blue-600 hover:text-blue-700 font-medium text-sm md:text-base">View details</a>
+        `;
+        list.appendChild(card);
+      });
+    }
+
+    // ────── Apply Filters ──────
+    function applyFilters() {
+      const search = document.getElementById("searchInput").value.toLowerCase().trim();
+      const fulltime = document.getElementById("chk-fulltime").checked;
+      const parttime = document.getElementById("chk-parttime").checked;
+      const intern = document.getElementById("chk-intern").checked;
+      const fresh = document.getElementById("chk-fresh").checked;
+      const exp12 = document.getElementById("chk-1-2").checked;
+      const exp35 = document.getElementById("chk-3-5").checked;
+      const exp68 = document.getElementById("chk-6-8").checked;
+      const exp9 = document.getElementById("chk-9plus").checked;
+      const salMin = parseFloat(document.getElementById("salaryMin").value) || 0;
+      const salMax = parseFloat(document.getElementById("salaryMax").value) || Infinity;
+
+      const typeFilters = [];
+      if (fulltime) typeFilters.push("Full-time");
+      if (parttime) typeFilters.push("Part-time");
+      if (intern) typeFilters.push("Intern");
+
+      const expFilters = [];
+      if (fresh) expFilters.push("Fresh");
+      if (exp12) expFilters.push("1-2 years");
+      if (exp35) expFilters.push("3-5 years");
+      if (exp68) expFilters.push("6-8 years");
+      if (exp9) expFilters.push("9+ years");
+
+      const filtered = jobsData.filter(job => {
+        if (search && !job.title.toLowerCase().includes(search) && !job.company.toLowerCase().includes(search)) return false;
+        if (typeFilters.length && !typeFilters.includes(job.type)) return false;
+        if (expFilters.length && !expFilters.includes(job.experience)) return false;
+        if (job.salaryMin < salMin || job.salaryMax > salMax) {
+          if (salMax !== Infinity && job.salaryMax > salMax) return false;
+          if (job.salaryMin < salMin) return false;
+        }
+        return true;
+      });
+
+      renderJobs(filtered);
+    }
+
+    // ────── Mobile Menu Toggle ──────
+    const mobileMenuButton = document.getElementById("mobileMenuButton");
+    const mobileNav = document.getElementById("mobileNav");
+    if (mobileMenuButton && mobileNav) {
+      mobileMenuButton.addEventListener("click", function() {
+        mobileNav.classList.toggle("hidden");
+      });
+    }
+
+    // ────── Mobile Filter Toggle ──────
+    const filterToggleBtn = document.getElementById("filterToggleBtn");
+    const filterContent = document.getElementById("filterContent");
+    const filterToggleIcon = document.getElementById("filterToggleIcon");
+    
+    if (filterToggleBtn && filterContent && filterToggleIcon) {
+      filterToggleBtn.addEventListener("click", () => {
+        filterContent.classList.toggle("hidden");
+        filterToggleIcon.classList.toggle("rotate-180");
+      });
+    }
+
+    // ────── Search on Enter ──────
+    document.getElementById("searchInput").addEventListener("keydown", e => {
+      if (e.key === "Enter") applyFilters();
+    });
+
+    // ────── Initial Render ──────
+    renderJobs(jobsData);
+  </script>
+</body>
+</html>

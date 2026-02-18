@@ -85,4 +85,7 @@ def loginuser(request):
          return render(request,'app/login.html',{"errormessage":"Invalid credentials"})
    return render(request,'app/login.html')
 
+def jobSearch(request):
+   return render(request,'app/jobsearch.html')
+
        

@@ -1,17 +1,321 @@
-{% load static  %}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Django Tailwind</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <!-- <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4" defer></script> -->
-    <script src="{% static 'src/tailwind.js' %}" defer></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Job Miner - Where Proven Skills Meet Perfect Roles</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h1 class="text-center text-8xl align-middle content-center">Hi welcome to our home page</h1>
-    <a href="{% url 'login' %}">Login</a>
-    <a href="{% url 'jobsignin' %}">Create account</a>
+<body class="min-h-screen bg-white">
+  <!-- Header -->
+  <header class="border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <div class="flex items-center justify-between">
+        <div class="text-2xl font-bold text-blue-600">Job Miner</div>
+
+        <!-- Mobile menu button -->
+        <button id="mobileMenuButton" class="md:hidden p-2 rounded-md text-gray-700 hover:bg-gray-100">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+
+        <nav id="desktopNav" class="hidden md:flex items-center space-x-8">
+          <a href="#popular" class="nav-link text-gray-700 hover:text-blue-600 transition-colors">Popular jobs</a>
+          <a href="#find" class="nav-link text-gray-700 hover:text-blue-600 transition-colors">Find jobs</a>
+          <a href="#post" class="nav-link text-gray-700 hover:text-blue-600 transition-colors">Post Jobs</a>
+          <a href="#dashboard" class="nav-link text-gray-700 hover:text-blue-600 transition-colors">Dashboard</a>
+        </nav>
+
+        <button class="hidden sm:inline-block bg-blue-600 text-white px-4 sm:px-8 py-2.5 rounded-full hover:bg-blue-700 transition-colors">
+          Login
+        </button>
+      </div>
+
+      <!-- Mobile nav (hidden by default) -->
+      <nav id="mobileNav" class="md:hidden mt-3 hidden">
+        <div class="flex flex-col space-y-2">
+          <a href="#popular" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50">Popular jobs</a>
+          <a href="#find" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50">Find jobs</a>
+          <a href="#post" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50">Post Jobs</a>
+          <a href="#dashboard" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50">Dashboard</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+      <div>
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+          Where Proven Skills Meet Perfect Roles
+        </h1>
+        <p class="text-gray-600 mb-8 text-base sm:text-lg leading-relaxed">
+          Whether you're a Miner looking to be valued for your craft, or a Company 
+          looking for a specific expert—our skill-engine finds the perfect gem every time.
+        </p>
+        
+        <div class="flex flex-col sm:flex-row gap-3">
+          <input 
+            type="text" 
+            id="searchInput"
+            placeholder="Search job" 
+            class="flex-1 px-4 sm:px-6 py-3 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
+          />
+          <button 
+            id="searchButton"
+            class="bg-blue-600 text-white px-6 sm:px-10 py-3 rounded-full hover:bg-blue-700 transition-colors font-medium"
+          >
+            Search
+          </button>
+        </div>
+      </div>
+      
+      <div class="flex justify-center">
+        <img src="https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=500&h=400&fit=crop" alt="Job search illustration" class="w-full max-w-xs sm:max-w-md rounded-lg" />
+      </div>
+    </div>
+  </section>
+
+  <!-- For Employers Section -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="grid md:grid-cols-2 gap-6">
+      <div class="border-2 border-gray-200 rounded-3xl p-8">
+        <h2 class="text-2xl font-bold text-gray-900 mb-4">For employers</h2>
+        <p class="text-gray-600 mb-6 leading-relaxed">
+          Post your roles, define your required skills, and let our engine unearth the top professionals in Yaoundé
+        </p>
+        <button class="bg-blue-600 text-white px-6 sm:px-8 py-3 rounded-full hover:bg-blue-700 transition-colors">
+          Post your jobs
+        </button>
+      </div>
+      
+      <div class="border-2 border-gray-200 rounded-3xl p-8">
+        <h2 class="text-2xl font-bold text-gray-900 mb-4">For job seekers</h2>
+        <p class="text-gray-600 mb-6 leading-relaxed">
+          Showcase your verified skills, let companies find you, and land roles that truly match your expertise
+        </p>
+        <button class="bg-blue-600 text-white px-6 sm:px-8 py-3 rounded-full hover:bg-blue-700 transition-colors">
+          Find your job
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Recent Jobs Section -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div class="flex items-center justify-between mb-8">
+      <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900">Recent Jobs</h2>
+      <a href="#all" class="text-blue-600 hover:text-blue-700 font-medium">View all jobs</a>
+    </div>
+    
+    <div class="grid md:grid-cols-2 gap-6">
+      <!-- Job Card 1 -->
+      <div class="border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-shadow">
+        <div class="flex items-start gap-4 mb-4">
+          <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
+            <svg class="w-6 h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12z"/>
+            </svg>
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center gap-3 mb-2">
+              <h3 class="text-lg md:text-xl font-bold text-gray-900">Jr. Web developer</h3>
+              <span class="bg-green-200 text-green-800 px-3 py-1 rounded-full text-sm font-medium">Active</span>
+            </div>
+            <p class="text-gray-600">by Digimark Consulting</p>
+          </div>
+        </div>
+        
+        <div class="flex gap-2 mb-4">
+          <span class="bg-blue-200 text-blue-800 px-4 py-1.5 rounded-full text-sm">Remote</span>
+          <span class="bg-blue-200 text-blue-800 px-4 py-1.5 rounded-full text-sm">12000XAF-5000000XAF</span>
+        </div>
+        
+        <a href="#details" class="text-blue-600 hover:text-blue-700 font-medium">View details</a>
+      </div>
+
+      <!-- Job Card 2 -->
+      <div class="border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-shadow">
+        <div class="flex items-start gap-4 mb-4">
+          <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
+            <svg class="w-6 h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12z"/>
+            </svg>
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center gap-3 mb-2">
+              <h3 class="text-lg md:text-xl font-bold text-gray-900">Senior Backend Engineer</h3>
+              <span class="bg-green-200 text-green-800 px-3 py-1 rounded-full text-sm font-medium">Active</span>
+            </div>
+            <p class="text-gray-600">by TechStart Solutions</p>
+          </div>
+        </div>
+        
+        <div class="flex gap-2 mb-4">
+          <span class="bg-blue-200 text-blue-800 px-4 py-1.5 rounded-full text-sm">Hybrid</span>
+          <span class="bg-blue-200 text-blue-800 px-4 py-1.5 rounded-full text-sm">80000XAF-150000XAF</span>
+        </div>
+        
+        <a href="#details" class="text-blue-600 hover:text-blue-700 font-medium">View details</a>
+      </div>
+
+      <!-- Job Card 3 -->
+      <div class="border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-shadow">
+        <div class="flex items-start gap-4 mb-4">
+          <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
+            <svg class="w-6 h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12z"/>
+            </svg>
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center gap-3 mb-2">
+              <h3 class="text-lg md:text-xl font-bold text-gray-900">UI/UX Designer</h3>
+              <span class="bg-green-200 text-green-800 px-3 py-1 rounded-full text-sm font-medium">Active</span>
+            </div>
+            <p class="text-gray-600">by Creative Labs</p>
+          </div>
+        </div>
+        
+        <div class="flex gap-2 mb-4">
+          <span class="bg-blue-200 text-blue-800 px-4 py-1.5 rounded-full text-sm">On-site</span>
+          <span class="bg-blue-200 text-blue-800 px-4 py-1.5 rounded-full text-sm">50000XAF-90000XAF</span>
+        </div>
+        
+        <a href="#details" class="text-blue-600 hover:text-blue-700 font-medium">View details</a>
+      </div>
+
+      <!-- Job Card 4 -->
+      <div class="border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-shadow">
+        <div class="flex items-start gap-4 mb-4">
+          <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
+            <svg class="w-6 h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12z"/>
+            </svg>
+          </div>
+          <div class="flex-1">
+            <div class="flex items-center gap-3 mb-2">
+              <h3 class="text-lg md:text-xl font-bold text-gray-900">Data Analyst</h3>
+              <span class="bg-green-200 text-green-800 px-3 py-1 rounded-full text-sm font-medium">Active</span>
+            </div>
+            <p class="text-gray-600">by Analytics Pro</p>
+          </div>
+        </div>
+        
+        <div class="flex gap-2 mb-4">
+          <span class="bg-blue-200 text-blue-800 px-4 py-1.5 rounded-full text-sm">Remote</span>
+          <span class="bg-blue-200 text-blue-800 px-4 py-1.5 rounded-full text-sm">60000XAF-120000XAF</span>
+        </div>
+        
+        <a href="#details" class="text-blue-600 hover:text-blue-700 font-medium">View details</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-blue-600 text-white py-12 mt-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6 mb-8">
+        <div>
+          <h3 class="text-2xl font-bold mb-2">Job Miner</h3>
+          <div>
+            <p class="text-xl font-semibold">Most complete job portal</p>
+            <p class="text-blue-100">Sign up to start mining your career gem</p>
+          </div>
+        </div>
+        
+        <div class="flex flex-col sm:flex-row gap-4">
+          <button class="w-full sm:w-auto bg-transparent border-2 border-white text-white px-6 sm:px-8 py-2.5 rounded-full hover:bg-white hover:text-blue-600 transition-colors">
+            Looking for a job
+          </button>
+          <button class="w-full sm:w-auto bg-white text-blue-600 px-6 sm:px-8 py-2.5 rounded-full hover:bg-blue-50 transition-colors font-medium">
+            Post a job
+          </button>
+        </div>
+      </div>
+      
+      <div class="border-t border-blue-500 pt-6 text-center">
+        <p>&copy; Copyright 2026</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Vanilla JavaScript -->
+  <script>
+    // Wait for DOM to be fully loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      // Search functionality
+      const searchButton = document.getElementById('searchButton');
+      const searchInput = document.getElementById('searchInput');
+      
+      function handleSearch() {
+        const searchTerm = searchInput.value.trim();
+        if (searchTerm) {
+          console.log('Searching for:', searchTerm);
+          alert('Searching for: ' + searchTerm);
+          // Add your search logic here
+          // Example: window.location.href = '/search?q=' + encodeURIComponent(searchTerm);
+        }
+      }
+      
+      // Search button click
+      searchButton.addEventListener('click', handleSearch);
+      
+      // Search on Enter key
+      searchInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          handleSearch();
+        }
+      });
+
+      // Mobile menu toggle
+      const mobileMenuButton = document.getElementById('mobileMenuButton');
+      const mobileNav = document.getElementById('mobileNav');
+      if (mobileMenuButton && mobileNav) {
+        mobileMenuButton.addEventListener('click', function() {
+          mobileNav.classList.toggle('hidden');
+        });
+      }
+
+      // Navigation menu interaction
+      const navLinks = document.querySelectorAll('.nav-link');
+      navLinks.forEach(function(link) {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          console.log('Navigate to:', this.textContent);
+          // Add your navigation logic here
+        });
+      });
+      
+      // Job card interactions
+      const jobCards = document.querySelectorAll('.hover\\:shadow-lg');
+      jobCards.forEach(function(card) {
+        card.addEventListener('click', function(e) {
+          if (e.target.tagName !== 'A') {
+            console.log('Job card clicked');
+            // Add job card click logic here
+          }
+        });
+      });
+      
+      // Smooth scrolling for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
+        anchor.addEventListener('click', function(e) {
+          const href = this.getAttribute('href');
+          if (href !== '#details' && href !== '#all') {
+            e.preventDefault();
+            const target = document.querySelector(href);
+            if (target) {
+              target.scrollIntoView({
+                behavior: 'smooth'
+              });
+            }
+          }
+        });
+      });
+    });
+  </script>
 </body>
 </html>
