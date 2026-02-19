@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Job Miner - Find Your Perfect Job</title>
-   <script src="{% static 'src/tailwind.js' %}" defer></script>
+  <script src="{% static 'src/tailwind.js' %}" defer></script>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="min-h-screen bg-white">
@@ -13,35 +13,55 @@
   <!-- Header -->
   <header class="border-b border-gray-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-      <div class="flex items-center justify-between">
+      <div class="flex items-center justify-around">
         <div class="text-2xl font-bold text-blue-600">Job Miner</div>
 
         <!-- Mobile menu button -->
-        <button id="mobileMenuButton" class="md:hidden p-2 rounded-md text-gray-700 hover:bg-gray-100">
+        <button id="mobileMenuButton" class="md:hidden  p-2 rounded-md text-gray-700 hover:bg-gray-100">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
           </svg>
         </button>
 
         <nav id="desktopNav" class="hidden md:flex items-center space-x-8">
-          <a href="#" class="text-gray-700 hover:text-blue-600 transition-colors">Popular jobs</a>
-          <a href="#" class="text-gray-700 hover:text-blue-600 transition-colors">Find jobs</a>
+          <a href="{% url 'home'%}#Recent" class="text-gray-700 hover:text-blue-600 transition-colors">Recent jobs</a>
+          <a href="{% url 'jobsearch' %}" class="text-gray-700 hover:text-blue-600 transition-colors">Find jobs</a>
           <a href="#" class="text-gray-700 hover:text-blue-600 transition-colors">Post Jobs</a>
           <a href="#" class="text-gray-700 hover:text-blue-600 transition-colors">Dashboard</a>
         </nav>
-
-        <button class="hidden sm:inline-block bg-blue-600 text-white px-4 sm:px-8 py-2.5 rounded-full hover:bg-blue-700 transition-colors">
+        <a href="{% url 'postsignin' %}">
+          <button class="hidden sm:inline-block bg-blue-600 text-white px-4 sm:px-8 py-2.5 rounded-full hover:bg-blue-700 transition-colors">
+          Sign in as Company
+        </button>
+        </a>
+          <a href="{% url 'jobsignin' %}">
+          <button class="hidden sm:inline-block bg-blue-600 text-white px-4 sm:px-8 py-2.5 rounded-full hover:bg-blue-700 transition-colors">
+          Sign in as Job Seeker
+        </button>
+        </a>
+          <a href="{% url 'login' %}">
+          <button class="hidden sm:inline-block bg-blue-600 text-white px-4 sm:px-8 py-2.5 rounded-full hover:bg-blue-700 transition-colors">
           Login
         </button>
+        </a>
       </div>
 
       <!-- Mobile nav (hidden by default) -->
       <nav id="mobileNav" class="md:hidden mt-3 hidden">
         <div class="flex flex-col space-y-2">
-          <a href="#" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50">Popular jobs</a>
-          <a href="#" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50">Find jobs</a>
+          <a  href="{% url 'home'%}#Recent" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50">Popular jobs</a>
+          <a  href="{% url 'jobsearch' %}" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50">Find jobs</a>
           <a href="#" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50">Post Jobs</a>
           <a href="#" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50">Dashboard</a>
+          <a href="{% url 'postsignin' %}"><button class="sm:inline-block bg-blue-600 text-white px-4 sm:px-8 py-2.5 rounded-full hover:bg-blue-700 transition-colors w-70">
+          Sign in as Company
+        </button></a>
+         <a href="{% url 'postsignin' %}"><button class="sm:inline-block bg-blue-600 text-white px-4 sm:px-8 py-2.5 rounded-full hover:bg-blue-700 transition-colors w-70">
+          Sign in as Job Seeker
+        </button></a>
+         <a href="{% url 'login' %}"><button class="sm:inline-block bg-blue-600 text-white px-4 sm:px-8 py-2.5 rounded-full hover:bg-blue-700 transition-colors w-70">
+         Login
+        </button></a>
         </div>
       </nav>
     </div>
@@ -363,7 +383,7 @@
         status: "Active"
       },
     ];
-
+    
     // ────── Render Jobs ──────
     function renderJobs(jobs) {
       const list = document.getElementById("jobList");
