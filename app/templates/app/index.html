@@ -7,13 +7,11 @@
   <title>Job Miner - Where Proven Skills Meet Perfect Roles</title>
   <!-- <script src="https://cdn.tailwindcss.com"></script> -->
   <script src="{% static 'src/tailwind.js' %}" defer></script>
+  <script src="{% static 'src/alpine.js' %}" defer></script>
 </head>
 <body class="min-h-screen bg-white">
-  <div x-data="{ isOpen: true }" class="relative flex justify-center">
-    <button @click="isOpen = true" class="px-6 py-2 mx-auto tracking-wide text-white capitalize transition-colors duration-300 transform bg-blue-600 rounded-md hover:bg-blue-500 focus:outline-none focus:ring focus:ring-blue-300 focus:ring-opacity-80">
-        Open Modal
-    </button>
-
+<div x-data="{ isOpen: false }" class="relative ">
+  
     <div x-show="isOpen" 
         x-transition:enter="transition duration-300 ease-out"
         x-transition:enter-start="translate-y-4 opacity-0 sm:translate-y-0 sm:scale-95"
@@ -61,7 +59,7 @@
             </div>
         </div>
     </div>
-</div>
+
   <!-- Header -->
   <header class="border-b border-gray-200">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -81,10 +79,15 @@
           <a href="#post" class="nav-link text-gray-700 hover:text-blue-600 transition-colors">Post Jobs</a>
           <a href="#dashboard" class="nav-link text-gray-700 hover:text-blue-600 transition-colors">Dashboard</a>
         </nav>
-
-       <a href="{% url 'postsignin' %}"><button class="hidden sm:inline-block bg-blue-600 text-white px-4 sm:px-8 py-2.5 rounded-full hover:bg-blue-700 transition-colors">
+        <div>
+            <button @click="isOpen = true" class="hidden sm:inline-block bg-blue-600 text-white px-4 sm:px-8 py-2.5 rounded-full hover:bg-blue-700 transition-colors">
           Login
-        </button></a>
+        </button>
+        <button @click="isOpen = true" class="hidden sm:inline-block bg-blue-600 text-white px-4 sm:px-8 py-2.5 rounded-full hover:bg-blue-700 transition-colors">
+          Sign in
+        </button>
+        </div>
+       
       </div>
 
       <!-- Mobile nav (hidden by default) -->
@@ -94,14 +97,17 @@
           <a href="{% url 'jobsearch' %}" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50">Find jobs</a>
           <a href="#post" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50">Post Jobs</a>
           <a href="#dashboard" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50">Dashboard</a>
-          <a href="{% url 'postsignin' %}"><button class="sm:inline-block bg-blue-600 text-white px-4 sm:px-8 py-2.5 rounded-full hover:bg-blue-700 transition-colors w-70">
+          <button @click="isOpen = true" class="sm:inline-block bg-blue-600 text-white px-4 sm:px-8 py-2.5 rounded-full hover:bg-blue-700 transition-colors w-70">
           Login
-        </button></a>
+        </button>
+        <button @click="isOpen = true" class=" sm:inline-block bg-blue-600 text-white px-4 sm:px-8 py-2.5 rounded-full hover:bg-blue-700 transition-colors">
+          Sign in
+        </button>
         </div>
       </nav>
     </div>
   </header>
-
+</div>
   <!-- Hero Section -->
   <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
       <div class="grid md:grid-cols-2 gap-12 items-center">
@@ -129,12 +135,12 @@
           </button>
         </div>
       </div>
-      
       <div class="flex justify-center">
         <img src="{% static 'images/job_illustration.jpg' %}" alt="Job search illustration" class="w-full max-w-xs sm:max-w-md  rounded-lg" />
       </div>
     </div>
   </section>
+
 
   <!-- For Employers Section -->
   <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -306,7 +312,9 @@
       // Search functionality
       const searchButton = document.getElementById('searchButton');
       const searchInput = document.getElementById('searchInput');
-      
+      let modalBtn = document.getElementById("modalBtn");
+
+
       function handleSearch() {
         const searchTerm = searchInput.value.trim();
         if (searchTerm) {

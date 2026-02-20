@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Junior Software Engineer — Job Miner</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --blue: #1A3EFF;
+      --blue-dark: #1230CC;
+      --light-blue-bg: #E3F2FD;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    body {
+      background: #ffffff;
+      color: #111;
+    }
+
+    /* Nav */
+    nav {
+      background: #fff;
+      border-bottom: 1px solid #E8EAFE;
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      color: #fff;
+      border-radius: 999px;
+      font-weight: 600;
+      transition: background 0.18s, transform 0.12s, box-shadow 0.18s;
+    }
+    .btn-primary:hover {
+      background: var(--blue-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 24px #1A3EFF33;
+    }
+    .btn-primary:active { transform: translateY(0); }
+
+    .nav-link {
+      font-size: 0.95rem;
+      color: #555;
+      font-weight: 500;
+      position: relative;
+      transition: color 0.18s;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      left: 0; bottom: -2px;
+      width: 0; height: 2px;
+      background: var(--blue);
+      border-radius: 2px;
+      transition: width 0.2s;
+    }
+    .nav-link:hover { color: var(--blue); }
+    .nav-link:hover::after { width: 100%; }
+
+    /* Hero header - blue section */
+    .hero-header {
+      background: linear-gradient(135deg, #D6E9F8 0%, #C4E0F5 100%);
+      border-radius: 12px 12px 0 0;
+      position: relative;
+      padding: 3rem 2rem 4rem 2rem;
+    }
+
+    /* White content card below */
+    .hero-content {
+      background: #fff;
+      border: 1.5px solid #E4E8FF;
+      border-radius: 0 0 12px 12px;
+      padding: 3.5rem 2rem 2rem 2rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+      position: relative;
+    }
+
+    .company-logo-large {
+      width: 90px;
+      height: 90px;
+      background: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 3px solid #fff;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      flex-shrink: 0;
+      overflow: hidden;
+      position: absolute;
+      left: 2rem;
+      top: -45px;
+      z-index: 10;
+    }
+
+    /* Content cards */
+    .content-card {
+      background: #fff;
+      border: 1.5px solid #E4E8FF;
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    }
+
+    /* Email display */
+    .email-display {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      background: #fff;
+      border-radius: 8px;
+      border: 1px solid #E4E8FF;
+    }
+    .email-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--blue);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* Salary box */
+    .salary-box {
+      background: #E8EBF0;
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #333;
+    }
+
+    /* Skills tags */
+    .skill-tag {
+      background: #A8A8A8;
+      color: #fff;
+      padding: 8px 18px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      display: inline-block;
+    }
+
+    /* Similar job item */
+    .similar-job-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 14px;
+      border-radius: 10px;
+      border: 1px solid #F0F0F0;
+      background: #fff;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+      cursor: pointer;
+    }
+    .similar-job-item:hover {
+      border-color: #D0D6FF;
+      box-shadow: 0 4px 16px rgba(26, 62, 255, 0.08);
+      transform: translateX(4px);
+    }
+
+    .similar-logo {
+      width: 50px;
+      height: 50px;
+      background: #FFF0E8;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: #E8541A;
+      border: 1px solid #FFD9C4;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .badge-remote {
+      background: #E3F2FD;
+      color: var(--blue);
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 6px;
+      padding: 4px 12px;
+      display: inline-block;
+    }
+
+    /* Animation */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in { animation: fadeIn 0.5s ease both; }
+    .fade-in-delay-1 { animation-delay: 0.1s; }
+    .fade-in-delay-2 { animation-delay: 0.2s; }
+  </style>
+</head>
+<body>
+
+<!-- ───────── NAVBAR ───────── -->
+<nav>
+  <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+    <a href="job-miner.html" class="text-xl font-extrabold" style="color:var(--blue)">Job Miner</a>
+    <div class="hidden md:flex items-center gap-8">
+      <a href="#" class="nav-link">Popular jobs</a>
+      <a href="#" class="nav-link">Find jobs</a>
+      <a href="#" class="nav-link">Post Jobs</a>
+      <a href="#" class="nav-link">Dashboard</a>
+    </div>
+    <div class="flex items-center gap-3">
+      <button class="btn-primary px-6 py-2 text-sm">Login</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ───────── MAIN CONTENT ───────── -->
+<main class="max-w-6xl mx-auto px-6 py-8">
+  
+  <!-- Hero Section -->
+  <div class="mb-8 fade-in">
+    <!-- Blue Header -->
+    <div class="hero-header"></div>
+    
+    <!-- White Content Card with Absolute Logo -->
+    <div class="hero-content">
+      <div class="company-logo-large">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%23FFF0E8'/%3E%3Ctext x='50' y='58' font-family='Arial' font-size='24' font-weight='bold' fill='%23E8541A' text-anchor='middle'%3EBC%3C/text%3E%3C/svg%3E" alt="Company Logo" style="width:100%; height:100%; object-fit:cover" />
+      </div>
+      
+      <div class="flex items-start justify-between gap-6 flex-wrap">
+        <div class="flex-1 min-w-0 pl-24">
+          <h1 class="text-3xl font-extrabold mb-1" style="color:#000">Junior Software Enginner</h1>
+          <p class="text-gray-400 text-base mb-4">Digimark Consulting</p>
+          <span class="badge-remote">Remote</span>
+        </div>
+        <div class="flex items-center">
+          <button class="btn-primary px-10 py-3 text-base font-bold">Apply</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Two column layout -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    
+    <!-- Left Column: Main Content -->
+    <div class="lg:col-span-2 space-y-6">
+      
+      <!-- About Company -->
+      <div class="content-card fade-in fade-in-delay-1">
+        <h2 class="text-xl font-bold mb-4">About company</h2>
+        <div class="text-gray-700 leading-relaxed space-y-3">
+          <p>At Digimark Consulting, we bridge the gap between sophisticated business strategy and world-class web development. As a specialized digital startup, we don't just build websites—we engineer scalable digital ecosystems designed to convert visitors into loyal customers.</p>
+          <p>Our mission is to empower brands with the technical infrastructure they need to thrive in a digital-first economy. By combining clean, future-proof code with data-driven design, we ensure your online presence is as professional and ambitious as your business goals.</p>
+        </div>
+
+        <!-- Email -->
+        <div class="mt-6 email-display">
+          <div class="email-icon">
+            <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="#fff" stroke-width="2">
+              <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="text-gray-800 font-medium"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="1e5a777977737f6c755e79737f7772307d7173">[email&#160;protected]</a></span>
+        </div>
+
+        <!-- Salary -->
+        <div class="mt-6">
+          <h3 class="font-bold text-sm uppercase tracking-wide text-gray-500 mb-3">Salary</h3>
+          <div class="salary-box">100,000-300,000</div>
+        </div>
+
+        <!-- Responsibility -->
+        <div class="mt-6">
+          <h3 class="font-bold text-lg mb-3">Responsibility</h3>
+          <ul class="text-gray-700 leading-relaxed space-y-2 list-none">
+            <li class="flex items-start gap-2">
+              <span class="text-gray-400 mt-1">-</span>
+              <span>Develop responsive and functional web features using modern stacks (e.g., HTML, CSS, JavaScript, and frameworks like React or Next.js).</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-gray-400 mt-1">-</span>
+              <span>Convert Figma or Adobe XD mockups into high-fidelity, interactive web components.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-gray-400 mt-1">-</span>
+              <span>Assist in connecting front-end interfaces with back-end services, databases, and third-party API.</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="text-gray-400 mt-1">-</span>
+              <span>Implement best practices for SEO, mobile responsiveness, and fast page-loading speeds.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Skills -->
+        <div class="mt-6">
+          <h3 class="font-bold text-lg mb-4">Skills</h3>
+          <div class="flex flex-wrap gap-3">
+            <span class="skill-tag">Javascript</span>
+            <span class="skill-tag">Javascript</span>
+            <span class="skill-tag">Javascript</span>
+            <span class="skill-tag">Javascript</span>
+            <span class="skill-tag">Javascript</span>
+            <span class="skill-tag">Javascript</span>
+            <span class="skill-tag">Javascript</span>
+          </div>
+        </div>
+
+        <!-- Apply Button -->
+        <div class="mt-8 text-center">
+          <button class="btn-primary px-12 py-3 text-base font-bold">Apply</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right Column: Similar Jobs -->
+    <div class="lg:col-span-1">
+      <div class="content-card fade-in fade-in-delay-2">
+        <h2 class="text-xl font-bold mb-5">Similar jobs</h2>
+        <div class="space-y-3">
+          
+          <div class="similar-job-item">
+            <div class="similar-logo">
+              BC
+            </div>
+            <div class="flex-1 min-w-0">
+              <h3 class="font-bold text-sm">Jr. Software Engineer</h3>
+              <p class="text-gray-400 text-xs mt-0.5">Crestlancing.ltd</p>
+            </div>
+          </div>
+
+          <div class="similar-job-item">
+            <div class="similar-logo">
+              BC
+            </div>
+            <div class="flex-1 min-w-0">
+              <h3 class="font-bold text-sm">Jr. Software Engineer</h3>
+              <p class="text-gray-400 text-xs mt-0.5">Crestlancing.ltd</p>
+            </div>
+          </div>
+
+          <div class="similar-job-item">
+            <div class="similar-logo">
+              BC
+            </div>
+            <div class="flex-1 min-w-0">
+              <h3 class="font-bold text-sm">Jr. Software Engineer</h3>
+              <p class="text-gray-400 text-xs mt-0.5">Crestlancing.ltd</p>
+            </div>
+          </div>
+
+          <div class="similar-job-item">
+            <div class="similar-logo">
+              BC
+            </div>
+            <div class="flex-1 min-w-0">
+              <h3 class="font-bold text-sm">Jr. Software Engineer</h3>
+              <p class="text-gray-400 text-xs mt-0.5">Crestlancing.ltd</p>
+            </div>
+          </div>
+
+          <div class="similar-job-item">
+            <div class="similar-logo">
+              BC
+            </div>
+            <div class="flex-1 min-w-0">
+              <h3 class="font-bold text-sm">Jr. Software Engineer</h3>
+              <p class="text-gray-400 text-xs mt-0.5">Crestlancing.ltd</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</main>
+
+<script>
+  // Apply button handlers
+  document.querySelectorAll('.btn-primary').forEach(btn => {
+    if (btn.textContent.trim() === 'Apply') {
+      btn.addEventListener('click', () => {
+        alert('Application submitted! We will contact you soon.');
+      });
+    }
+  });
+
+  // Similar job click handler
+  document.querySelectorAll('.similar-job-item').forEach(item => {
+    item.addEventListener('click', () => {
+      // In a real app, this would navigate to the job detail page
+      console.log('Clicked similar job:', item.querySelector('h3').textContent);
+    });
+  });
+</script>
+
+</body>
+</html>

@@ -88,4 +88,8 @@ def loginuser(request):
 def jobSearch(request):
    return render(request,'app/jobsearch.html')
 
+def jobDetails(request):
+   return render(request,'app/jobdetail.html')
+
+
        

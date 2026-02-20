@@ -8,5 +8,6 @@ urlpatterns = [
     path('postsignin/', views.companysignin, name='postsignin'),
     path('login/', views.loginuser, name='login'),
     path('jobsearch/', views.jobSearch, name='jobsearch'),
+    path('jobdetail/', views.jobDetails, name='jobdetail'),
 
 ]
