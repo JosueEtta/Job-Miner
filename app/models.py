@@ -30,3 +30,13 @@ class job(models.Model):
    requirement = models.JSONField()
    employment_type = models.CharField(max_length=250)
    posted_date = models.DateField(auto_now_add=True)
+   min_salary = models.IntegerField()
+   max_salary = models.IntegerField()
+   experience_required = models.IntegerField()
+   skills_required = models.JSONField()
+   
+class application(models.Model):
+   job = models.ForeignKey(job,on_delete=models.CASCADE,related_name='job_applications')
+   jobseeker = models.ForeignKey(jobseeker,on_delete=models.CASCADE,related_name='jobseeker_applications')
+   application_date = models.DateField(auto_now_add=True)
+   status = models.CharField(max_length=50,default="pending")
