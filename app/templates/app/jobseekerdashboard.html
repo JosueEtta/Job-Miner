@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Job Miner - Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --blue: #1A3EFF;
+      --blue-dark: #1230CC;
+      --blue-light: #E6EFFF;
+      --green: #10B981;
+      --red: #EF4444;
+      --amber: #F59E0B;
+      --gray-50: #F9FAFB;
+      --gray-100: #F3F4F6;
+      --gray-200: #E5E7EB;
+      --gray-300: #D1D5DB;
+      --gray-400: #9CA3AF;
+      --gray-500: #6B7280;
+      --gray-600: #4B5563;
+      --gray-700: #374151;
+      --gray-900: #111827;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      background: #ffffff;
+      color: var(--gray-900);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    #app {
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ──── SIDEBAR ──── */
+    .sidebar {
+      display: none;
+    }
+
+    .sidebar-header {
+      padding: 24px 16px;
+      border-bottom: 1px solid var(--gray-100);
+    }
+
+    .logo {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--blue);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .sidebar-content {
+      flex: 1;
+      padding: 16px 0;
+    }
+
+    .sidebar-section {
+      padding: 8px 0;
+      margin-bottom: 8px;
+    }
+
+    .sidebar-label {
+      padding: 8px 16px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: var(--gray-500);
+      letter-spacing: 0.5px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      color: var(--gray-600);
+      text-decoration: none;
+      transition: all 0.2s;
+      margin: 0 8px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+
+    .nav-item:hover {
+      background: var(--gray-50);
+      color: var(--blue);
+    }
+
+    .nav-item.active {
+      background: var(--blue-light);
+      color: var(--blue);
+      font-weight: 600;
+    }
+
+    .nav-icon {
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .sidebar-footer {
+      padding: 16px;
+      border-top: 1px solid var(--gray-100);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--blue-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      color: var(--blue);
+    }
+
+    .user-info {
+      flex: 1;
+      font-size: 0.9rem;
+    }
+
+    .user-name {
+      font-weight: 600;
+      color: var(--gray-900);
+    }
+
+    .user-role {
+      font-size: 0.8rem;
+      color: var(--gray-500);
+    }
+
+    /* ──── MAIN CONTENT ──── */
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      width: 100%;
+    }
+
+    /* Top Bar */
+    .top-bar {
+      background: #fff;
+      border-bottom: 1px solid #E8EAFE;
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+
+    .top-bar-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.9rem;
+    }
+
+    .breadcrumb-item {
+      color: var(--gray-600);
+    }
+
+    .breadcrumb-item.active {
+      color: var(--gray-900);
+      font-weight: 600;
+    }
+
+    .search-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--gray-100);
+      padding: 8px 16px;
+      border-radius: 8px;
+      width: 300px;
+    }
+
+    .search-box input {
+      background: none;
+      border: none;
+      outline: none;
+      width: 100%;
+      font-size: 0.9rem;
+      color: var(--gray-900);
+    }
+
+    .search-box input::placeholder {
+      color: var(--gray-400);
+    }
+
+    .top-bar-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .notification-btn {
+      position: relative;
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: #F7F8FF;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      color: var(--gray-600);
+    }
+
+    .notification-btn:hover {
+      background: var(--blue-light);
+      color: var(--blue);
+    }
+
+    .badge-count {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: var(--red);
+      color: white;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+    }
+
+    /* Content Area */
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 32px;
+      background: #ffffff;
+    }
+
+    .page-header {
+      margin-bottom: 32px;
+    }
+
+    .page-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: 8px;
+    }
+
+    .page-subtitle {
+      font-size: 0.95rem;
+      color: var(--gray-600);
+    }
+
+    /* Grid Layouts */
+    .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+
+    @media (max-width: 1400px) {
+      .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 1000px) {
+      .grid-4, .grid-3 { grid-template-columns: 1fr; }
+      .grid-2 { grid-template-columns: 1fr; }
+      .sidebar { width: 200px; }
+      .top-bar { padding: 12px 16px; }
+      .content { padding: 16px; }
+    }
+
+    /* Cards */
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      border: 1.5px solid #E4E8FF;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+      transition: all 0.2s;
+    }
+
+    .card:hover {
+      box-shadow: 0 8px 32px rgba(26, 62, 255, 0.12);
+      border-color: #B8C2FF;
+    }
+
+    .stat-card {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--gray-600);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-value {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--gray-900);
+      line-height: 1;
+    }
+
+    .stat-change {
+      font-size: 0.85rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .stat-change.up { color: var(--green); }
+    .stat-change.down { color: var(--red); }
+    .stat-change.neutral { color: var(--gray-500); }
+
+    /* Progress Bar */
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      background: var(--gray-200);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--blue);
+      border-radius: 3px;
+      transition: width 0.3s ease;
+    }
+
+    /* Table */
+    .table-card {
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .table-header {
+      padding: 16px 24px;
+      border-bottom: 1.5px solid #E4E8FF;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .table-header h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--gray-900);
+    }
+
+    .table-rows {
+      overflow-y: auto;
+      max-height: 400px;
+    }
+
+    .table-row {
+      padding: 16px 24px;
+      border-bottom: 1px solid #F0F0F0;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      transition: background 0.2s;
+    }
+
+    .table-row:hover { background: #FAFBFF; }
+    .table-row:last-child { border-bottom: none; }
+
+    .row-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .row-content {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .row-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--gray-900);
+    }
+
+    .row-subtitle {
+      font-size: 0.85rem;
+      color: var(--gray-500);
+    }
+
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .badge-applied {
+      background: #DDE2FF;
+      color: #2940C8;
+    }
+
+    .badge-accepted {
+      background: #D1FAE5;
+      color: #065F46;
+    }
+
+    .badge-rejected {
+      background: #FEE2E2;
+      color: #991B1B;
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+    }
+
+    .badge-applied .badge-dot { background: #2940C8; }
+    .badge-accepted .badge-dot { background: #10B981; }
+    .badge-rejected .badge-dot { background: #EF4444; }
+
+    /* Button */
+    .btn {
+      border: none;
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      color: white;
+      border-radius: 999px;
+      font-weight: 600;
+      transition: background 0.18s, transform 0.12s, box-shadow 0.18s;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-primary:hover {
+      background: var(--blue-dark);
+      box-shadow: 0 6px 24px #1A3EFF33;
+    }
+
+    .btn-secondary {
+      background: var(--gray-100);
+      color: var(--gray-700);
+      border-radius: 999px;
+      font-weight: 600;
+      transition: background 0.18s, transform 0.12s;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-secondary:hover {
+      background: var(--gray-200);
+      transform: translateY(-1px);
+    }
+
+    .btn-icon {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      color: var(--gray-600);
+      transition: color 0.2s;
+    }
+
+    .btn-icon:hover {
+      color: var(--blue);
+    }
+
+    /* Empty State */
+    .empty-state {
+      padding: 40px 24px;
+      text-align: center;
+      color: var(--gray-500);
+    }
+
+    .empty-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      opacity: 0.5;
+    }
+
+    .empty-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--gray-700);
+      margin-bottom: 8px;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal.active { display: flex; }
+
+    .modal-content {
+      background: #fff;
+      border-radius: 12px;
+      padding: 32px;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-header {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .modal-footer {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      margin-top: 24px;
+    }
+
+    /* Animations */
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in { animation: slideIn 0.3s ease; }
+  </style>
+</head>
+<body>
+<div id="app">
+  <!-- ──── SIDEBAR HIDDEN ──── -->
+
+  <!-- ──── MAIN CONTENT ──── -->
+  <div class="main-content">
+    <!-- Top Bar -->
+    <div class="top-bar">
+      <div style="flex: 1;">
+        <h2 style="font-size: 1.3rem; font-weight: 600; color: var(--gray-900);">Job Miner Dashboard</h2>
+      </div>
+
+      <div class="top-bar-right">
+        <button class="notification-btn" onclick="toggleNotifications()">
+          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="badge-count">3</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Content Area -->
+    <div class="content">
+      <div id="dashboard-tab" class="tab-content">
+        <!-- Page Header -->
+        <div class="page-header">
+          <h1 class="page-title">Hi, Welcome Back! 👋</h1>
+          <p class="page-subtitle">Track your job applications and career progress in one place</p>
+        </div>
+
+        <!-- Stats Row -->
+        <div class="grid-4">
+          <div class="card stat-card fade-in">
+            <div class="stat-icon" style="background: #E0F2FE;">📊</div>
+            <div class="stat-label">Total Applications</div>
+            <div class="stat-value">24</div>
+            <div class="stat-change up">↑ 8% from last month</div>
+          </div>
+
+          <div class="card stat-card fade-in">
+            <div class="stat-icon" style="background: #DCFCE7;">✅</div>
+            <div class="stat-label">Accepted</div>
+            <div class="stat-value">8</div>
+            <div class="stat-change up">↑ 2 this week</div>
+          </div>
+
+          <div class="card stat-card fade-in">
+            <div class="stat-icon" style="background: #FEE2E2;">⏳</div>
+            <div class="stat-label">Pending Review</div>
+            <div class="stat-value">10</div>
+            <div class="stat-change neutral">→ No change</div>
+          </div>
+
+          <div class="card stat-card fade-in">
+            <div class="stat-icon" style="background: #FEF08A;">🎯</div>
+            <div class="stat-label">Success Rate</div>
+            <div class="stat-value">33%</div>
+            <div class="stat-change up">↑ 5% improvement</div>
+          </div>
+        </div>
+
+        <!-- Main Grid -->
+        <div style="margin-top: 32px;">
+          <!-- Job Postings Table -->
+          <div class="card table-card fade-in">
+            <div class="table-header">
+              <h3>Available Job Postings</h3>
+              <button class="btn btn-primary" style="font-size: 0.85rem;">View All Posts</button>
+            </div>
+            <div style="overflow-x: auto;">
+              <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                  <tr style="background-color: #F7F8FF; border-bottom: 2px solid #E4E8FF;">
+                    <th style="padding: 16px 24px; text-align: left; font-weight: 600; color: var(--gray-600); font-size: 0.85rem; width: 20%;">Job Title</th>
+                    <th style="padding: 16px 24px; text-align: left; font-weight: 600; color: var(--gray-600); font-size: 0.85rem; width: 18%;">Company</th>
+                    <th style="padding: 16px 24px; text-align: left; font-weight: 600; color: var(--gray-600); font-size: 0.85rem; width: 15%;">Location</th>
+                    <th style="padding: 16px 24px; text-align: left; font-weight: 600; color: var(--gray-600); font-size: 0.85rem; width: 16%;">Salary</th>
+                    <th style="padding: 16px 24px; text-align: left; font-weight: 600; color: var(--gray-600); font-size: 0.85rem; width: 14%;">Posted Date</th>
+                    <th style="padding: 16px 24px; text-align: center; font-weight: 600; color: var(--gray-600); font-size: 0.85rem; width: 17%;">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr style="border-bottom: 1px solid #F0F0F0;" onmouseover="this.style.backgroundColor='#FAFBFF'" onmouseout="this.style.backgroundColor='transparent'">
+                    <td style="padding: 16px 24px; font-weight: 600; color: var(--gray-900);">Senior Frontend Developer</td>
+                    <td style="padding: 16px 24px; color: var(--gray-600);">Digimark Consulting</td>
+                    <td style="padding: 16px 24px; color: var(--gray-600);">Remote</td>
+                    <td style="padding: 16px 24px; color: var(--gray-600);">$120k - $150k</td>
+                    <td style="padding: 16px 24px; color: var(--gray-600);">2025-02-20</td>
+                    <td style="padding: 16px 24px; text-align: center;"><button class="btn btn-primary" style="font-size: 0.8rem; padding: 6px 12px;">Apply</button></td>
+                  </tr>
+                  <tr style="border-bottom: 1px solid #F0F0F0;" onmouseover="this.style.backgroundColor='#FAFBFF'" onmouseout="this.style.backgroundColor='transparent'">
+                    <td style="padding: 16px 24px; font-weight: 600; color: var(--gray-900);">Full Stack Engineer</td>
+                    <td style="padding: 16px 24px; color: var(--gray-600);">TechNova Solutions</td>
+                    <td style="padding: 16px 24px; color: var(--gray-600);">San Francisco, CA</td>
+                    <td style="padding: 16px 24px; color: var(--gray-600);">$110k - $140k</td>
+                    <td style="padding: 16px 24px; color: var(--gray-600);">2025-02-19</td>
+                    <td style="padding: 16px 24px; text-align: center;"><button class="btn btn-primary" style="font-size: 0.8rem; padding: 6px 12px;">Apply</button></td>
+                  </tr>
+                  <tr style="border-bottom: 1px solid #F0F0F0;" onmouseover="this.style.backgroundColor='#FAFBFF'" onmouseout="this.style.backgroundColor='transparent'">
+                    <td style="padding: 16px 24px; font-weight: 600; color: var(--gray-900);">React Data Developer</td>
+                    <td style="padding: 16px 24px; color: var(--gray-600);">Creative Labs</td>
+                    <td style="padding: 16px 24px; color: var(--gray-600);">New York, NY</td>
+                    <td style="padding: 16px 24px; color: var(--gray-600);">$100k - $130k</td>
+                    <td style="padding: 16px 24px; color: var(--gray-600);">2025-02-18</td>
+                    <td style="padding: 16px 24px; text-align: center;"><button class="btn btn-primary" style="font-size: 0.8rem; padding: 6px 12px;">Apply</button></td>
+                  </tr>
+                  <tr style="border-bottom: 1px solid #F0F0F0;" onmouseover="this.style.backgroundColor='#FAFBFF'" onmouseout="this.style.backgroundColor='transparent'">
+                    <td style="padding: 16px 24px; font-weight: 600; color: var(--gray-900);">Backend Developer</td>
+                    <td style="padding: 16px 24px; color: var(--gray-600);">Bright Systems</td>
+                    <td style="padding: 16px 24px; color: var(--gray-600);">Hybrid</td>
+                    <td style="padding: 16px 24px; color: var(--gray-600);">$105k - $135k</td>
+                    <td style="padding: 16px 24px; color: var(--gray-600);">2025-02-17</td>
+                    <td style="padding: 16px 24px; text-align: center;"><button class="btn btn-primary" style="font-size: 0.8rem; padding: 6px 12px;">Apply</button></td>
+                  </tr>
+                  <tr style="border-bottom: 1px solid #F0F0F0;" onmouseover="this.style.backgroundColor='#FAFBFF'" onmouseout="this.style.backgroundColor='transparent'">
+                    <td style="padding: 16px 24px; font-weight: 600; color: var(--gray-900);">DevOps Engineer</td>
+                    <td style="padding: 16px 24px; color: var(--gray-600);">Cloud Masters</td>
+                    <td style="padding: 16px 24px; color: var(--gray-600);">Remote</td>
+                    <td style="padding: 16px 24px; color: var(--gray-600);">$115k - $145k</td>
+                    <td style="padding: 16px 24px; color: var(--gray-600);">2025-02-16</td>
+                    <td style="padding: 16px 24px; text-align: center;"><button class="btn btn-primary" style="font-size: 0.8rem; padding: 6px 12px;">Apply</button></td>
+                  </tr>
+                  <tr style="border-bottom: 1px solid #F0F0F0;" onmouseover="this.style.backgroundColor='#FAFBFF'" onmouseout="this.style.backgroundColor='transparent'">
+                    <td style="padding: 16px 24px; font-weight: 600; color: var(--gray-900);">Mobile Developer</td>
+                    <td style="padding: 16px 24px; color: var(--gray-600);">AppGenius</td>
+                    <td style="padding: 16px 24px; color: var(--gray-600);">Austin, TX</td>
+                    <td style="padding: 16px 24px; color: var(--gray-600);">$100k - $125k</td>
+                    <td style="padding: 16px 24px; color: var(--gray-600);">2025-02-15</td>
+                    <td style="padding: 16px 24px; text-align: center;"><button class="btn btn-primary" style="font-size: 0.8rem; padding: 6px 12px;">Apply</button></td>
+                  </tr>
+                  <tr style="border-bottom: 1px solid #F0F0F0;" onmouseover="this.style.backgroundColor='#FAFBFF'" onmouseout="this.style.backgroundColor='transparent'">
+                    <td style="padding: 16px 24px; font-weight: 600; color: var(--gray-900);">Data Analyst</td>
+                    <td style="padding: 16px 24px; color: var(--gray-600);">DataCorp</td>
+                    <td style="padding: 16px 24px; color: var(--gray-600);">Chicago, IL</td>
+                    <td style="padding: 16px 24px; color: var(--gray-600);">$90k - $120k</td>
+                    <td style="padding: 16px 24px; color: var(--gray-600);">2025-02-14</td>
+                    <td style="padding: 16px 24px; text-align: center;"><button class="btn btn-primary" style="font-size: 0.8rem; padding: 6px 12px;">Apply</button></td>
+                  </tr>
+                  <tr style="border-bottom: 1px solid #F0F0F0;" onmouseover="this.style.backgroundColor='#FAFBFF'" onmouseout="this.style.backgroundColor='transparent'">
+                    <td style="padding: 16px 24px; font-weight: 600; color: var(--gray-900);">Software Architect</td>
+                    <td style="padding: 16px 24px; color: var(--gray-600);">Enterprise Systems</td>
+                    <td style="padding: 16px 24px; color: var(--gray-600);">Boston, MA</td>
+                    <td style="padding: 16px 24px; color: var(--gray-600);">$130k - $160k</td>
+                    <td style="padding: 16px 24px; color: var(--gray-600);">2025-02-13</td>
+                    <td style="padding: 16px 24px; text-align: center;"><button class="btn btn-primary" style="font-size: 0.8rem; padding: 6px 12px;">Apply</button></td>
+                  </tr>
+                  <tr style="border-bottom: none;" onmouseover="this.style.backgroundColor='#FAFBFF'" onmouseout="this.style.backgroundColor='transparent'">
+                    <td style="padding: 16px 24px; font-weight: 600; color: var(--gray-900);">Product Manager</td>
+                    <td style="padding: 16px 24px; color: var(--gray-600);">Innovate Tech</td>
+                    <td style="padding: 16px 24px; color: var(--gray-600);">Seattle, WA</td>
+                    <td style="padding: 16px 24px; color: var(--gray-600);">$120k - $150k</td>
+                    <td style="padding: 16px 24px; color: var(--gray-600);">2025-02-12</td>
+                    <td style="padding: 16px 24px; text-align: center;"><button class="btn btn-primary" style="font-size: 0.8rem; padding: 6px 12px;">Apply</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Notification Modal -->
+<div id="notificationModal" class="modal" onclick="closeNotifications(event)">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <div class="modal-header">📬 Notifications</div>
+    <div id="notificationsList" style="max-height: 300px; overflow-y: auto;">
+      <!-- Notifications will be populated here -->
+    </div>
+  </div>
+</div>
+
+<!-- Job Details Modal -->
+<div id="jobDetailsModal" class="modal" onclick="closeJobDetails(event)">
+  <div class="modal-content" onclick="event.stopPropagation()">
+    <div class="modal-header" id="jobModalTitle">Job Details</div>
+    <div id="jobModalContent" style="margin-bottom: 20px;"></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeJobDetails()">Close</button>
+      <button class="btn btn-primary">View Full Application</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Sample job data
+  const jobs = [
+    { id: 1, title: 'Senior Frontend Developer', company: 'Digimark Consulting', date: '2025-02-20', skillMatch: 92, status: 'accepted', salary: '$120k-$150k', location: 'Remote' },
+    { id: 2, title: 'Full Stack Engineer', company: 'TechNova Solutions', date: '2025-02-19', skillMatch: 88, status: 'applied', salary: '$110k-$140k', location: 'Hybrid' },
+    { id: 3, title: 'React Developer', company: 'Creative Labs', date: '2025-02-18', skillMatch: 85, status: 'applied', salary: '$100k-$130k', location: 'New York, NY' },
+  ];
+
+  // Sample notifications
+  const notifications = [
+    { id: 1, type: 'interview', title: 'Interview Scheduled', message: 'Digimark Consulting scheduled an interview', time: '2 hours ago' },
+    { id: 2, type: 'accepted', title: 'Application Accepted', message: 'Your application for Senior Developer was accepted', time: '1 day ago' },
+    { id: 3, type: 'rejected', title: 'Application Update', message: 'Unfortunately, the position has been filled', time: '3 days ago' },
+  ];
+
+  // Switch tabs
+  function switchTab(tab) {
+    const navItems = document.querySelectorAll('.nav-item');
+    navItems.forEach(item => item.classList.remove('active'));
+    
+    event.target.closest('.nav-item').classList.add('active');
+    
+    // For now, just show a notification
+    console.log(`Switched to ${tab}`);
+  }
+
+  // Toggle notifications modal
+  function toggleNotifications() {
+    const modal = document.getElementById('notificationModal');
+    const notificationsList = document.getElementById('notificationsList');
+    
+    notificationsList.innerHTML = notifications.map(notif => `
+      <div style="padding: 16px; border-bottom: 1px solid var(--gray-100); cursor: pointer; transition: background 0.2s;" onmouseover="this.style.background='var(--gray-50)'" onmouseout="this.style.background='transparent'">
+        <div style="display: flex; gap: 12px; align-items: flex-start;">
+          <div style="font-size: 20px;">
+            ${notif.type === 'interview' ? '📅' : notif.type === 'accepted' ? '✅' : '❌'}
+          </div>
+          <div style="flex: 1;">
+            <div style="font-weight: 600; color: var(--gray-900); margin-bottom: 4px;">${notif.title}</div>
+            <div style="font-size: 0.85rem; color: var(--gray-600); margin-bottom: 4px;">${notif.message}</div>
+            <div style="font-size: 0.8rem; color: var(--gray-400);">${notif.time}</div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+    
+    modal.classList.toggle('active');
+  }
+
+  // Close notifications modal
+  function closeNotifications(event) {
+    if (event) {
+      const modal = document.getElementById('notificationModal');
+      modal.classList.remove('active');
+    }
+  }
+
+  // View job details
+  function viewJobDetails(id) {
+    const job = jobs.find(j => j.id === id);
+    if (job) {
+      const modal = document.getElementById('jobDetailsModal');
+      const title = document.getElementById('jobModalTitle');
+      const content = document.getElementById('jobModalContent');
+      
+      title.textContent = job.title;
+      content.innerHTML = `
+        <div style="background: var(--gray-50); padding: 16px; border-radius: 8px; margin-bottom: 16px;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+            <div>
+              <div style="font-size: 0.85rem; color: var(--gray-600); margin-bottom: 4px;">Company</div>
+              <div style="font-weight: 600; color: var(--gray-900);">${job.company}</div>
+            </div>
+            <div>
+              <div style="font-size: 0.85rem; color: var(--gray-600); margin-bottom: 4px;">Location</div>
+              <div style="font-weight: 600; color: var(--gray-900);">${job.location}</div>
+            </div>
+            <div>
+              <div style="font-size: 0.85rem; color: var(--gray-600); margin-bottom: 4px;">Salary Range</div>
+              <div style="font-weight: 600; color: var(--gray-900);">${job.salary}</div>
+            </div>
+            <div>
+              <div style="font-size: 0.85rem; color: var(--gray-600); margin-bottom: 4px;">Applied</div>
+              <div style="font-weight: 600; color: var(--gray-900);">${new Date(job.date).toLocaleDateString()}</div>
+            </div>
+          </div>
+        </div>
+        <div style="padding: 16px; background: #F0F4FF; border-radius: 8px; margin-bottom: 16px;">
+          <div style="font-size: 0.85rem; color: var(--gray-600); margin-bottom: 8px;">Skill Match</div>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="flex: 1; height: 8px; background: var(--gray-200); border-radius: 4px; overflow: hidden;">
+              <div style="width: ${job.skillMatch}%; height: 100%; background: var(--blue); border-radius: 4px;"></div>
+            </div>
+            <div style="font-weight: 600; color: var(--blue);">${job.skillMatch}%</div>
+          </div>
+        </div>
+      `;
+      
+      modal.classList.add('active');
+    }
+  }
+
+  // Close job details modal
+  function closeJobDetails(event) {
+    if (event) {
+      event.stopPropagation();
+    }
+    const modal = document.getElementById('jobDetailsModal');
+    modal.classList.remove('active');
+  }
+
+  // Prevent modal from closing when clicking inside
+  document.querySelectorAll('.modal-content').forEach(modal => {
+    modal.addEventListener('click', (e) => e.stopPropagation());
+  });
+</script>
+
+</body>

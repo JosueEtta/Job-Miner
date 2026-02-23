@@ -22,3 +22,11 @@ class jobseeker(models.Model):
 class company(models.Model):
    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,related_name='company')
    about_company = models.CharField(max_length=250)
+
+class job(models.Model):
+   company = models.ForeignKey(company,on_delete=models.CASCADE,related_name='company_jobs')
+   job_title = models.CharField(max_length=250)
+   responsibility = models.JSONField()
+   requirement = models.JSONField()
+   employment_type = models.CharField(max_length=250)
+   posted_date = models.DateField(auto_now_add=True)

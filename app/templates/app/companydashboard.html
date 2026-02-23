@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Employer Command Center - Job Miner</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --blue: #1A3EFF;
+      --blue-dark: #1230CC;
+      --blue-light: #E6EFFF;
+      --green: #10B981;
+      --red: #EF4444;
+      --red-dot: #DC2626;
+      --gray-50: #FAFBFC;
+      --gray-100: #F3F4F6;
+      --gray-200: #E5E7EB;
+      --gray-400: #9CA3AF;
+      --gray-600: #4B5563;
+      --gray-900: #111827;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      background: #ffffff;
+      color: var(--gray-900);
+    }
+
+    /* Top Bar */
+    .top-bar {
+      background: #fff;
+      border-bottom: 1px solid #E8EAFE;
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .top-bar-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: var(--gray-900);
+    }
+
+    .btn-primary {
+      background: var(--blue);
+      color: #fff;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: background 0.18s, transform 0.12s, box-shadow 0.18s;
+      border: none;
+      cursor: pointer;
+      padding: 10px 16px;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-primary:hover {
+      background: var(--blue-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 24px #1A3EFF33;
+    }
+
+    /* Main Container */
+    #app {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 32px;
+    }
+
+    /* Section Header */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+    }
+
+    .section-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--gray-900);
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      background: #fff;
+      border-radius: 12px;
+      border: 1.5px solid #E4E8FF;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .stat-card:hover {
+      box-shadow: 0 8px 24px rgba(26, 62, 255, 0.12);
+      border-color: #B8C2FF;
+    }
+
+    .stat-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      font-size: 24px;
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--gray-600);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--gray-900);
+    }
+
+    /* Table Container */
+    .pipeline-table {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+      border: 1.5px solid #E4E8FF;
+      overflow-x: auto;
+    }
+
+    /* Table Structure */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 800px;
+    }
+
+    thead {
+      background: #F7F8FF;
+      border-bottom: 1.5px solid #E4E8FF;
+    }
+
+    th {
+      text-align: left;
+      padding: 16px 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--gray-600);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    th:first-child {
+      width: 60px;
+      text-align: center;
+    }
+
+    th:nth-child(2) {
+      width: 25%;
+    }
+
+    th:nth-child(3) {
+      width: 25%;
+    }
+
+    th:nth-child(4) {
+      width: 140px;
+      text-align: center;
+    }
+
+    th:nth-child(5) {
+      width: 140px;
+      text-align: center;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid #F0F0F0;
+      transition: background 0.15s;
+    }
+
+    tbody tr:hover {
+      background: #FAFBFF;
+    }
+
+    tbody tr.selected {
+      background: #F0F4FF;
+    }
+
+    tbody tr:last-child {
+      border-bottom: none;
+    }
+
+    td {
+      padding: 16px 20px;
+      vertical-align: middle;
+    }
+
+    td:first-child {
+      text-align: center;
+    }
+
+    td:nth-child(4),
+    td:nth-child(5) {
+      text-align: center;
+    }
+
+    /* Checkbox */
+    .custom-checkbox {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border: 1.5px solid #C0C8F8;
+      border-radius: 4px;
+      background: #fff;
+      cursor: pointer;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .custom-checkbox:checked {
+      background: var(--blue);
+      border-color: var(--blue);
+      background-image: url("data:image/svg+xml,%3Csvg width='10' height='8' viewBox='0 0 10 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 4L3.5 6.5L9 1' stroke='white' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: center;
+    }
+
+    /* Candidate Info */
+    .candidate-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: #fff;
+      flex-shrink: 0;
+    }
+
+    .candidate-name {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--gray-900);
+    }
+
+    /* Badges */
+    .skill-badge {
+      background: var(--blue);
+      color: #fff;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: inline-block;
+    }
+
+    .status-badge {
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      display: inline-block;
+    }
+
+    .status-screening { background: #FEF3C7; color: #92400E; }
+    .status-interview { background: #DBEAFE; color: #1E40AF; }
+    .status-hired { background: #DCFCE7; color: #166534; }
+    .status-rejected { background: #FEE2E2; color: #991B1B; }
+
+    /* Bulk Actions Bar */
+    .bulk-actions-bar {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px 24px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+      border: 1.5px solid #E4E8FF;
+      display: none;
+      align-items: center;
+      gap: 16px;
+      z-index: 100;
+    }
+
+    .bulk-actions-bar.active {
+      display: flex;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--gray-600);
+      border: 1px solid #E4E8FF;
+      border-radius: 8px;
+      padding: 8px 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--blue);
+      color: var(--blue);
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      background: #fff;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 600px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-header {
+      padding: 24px;
+      border-bottom: 1px solid #E4E8FF;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-body {
+      padding: 24px;
+    }
+
+    .modal-footer {
+      padding: 24px;
+      border-top: 1px solid #E4E8FF;
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--gray-600);
+    }
+
+    .form-label {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: var(--gray-900);
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .form-input,
+    .form-textarea {
+      width: 100%;
+      border: 1px solid #E4E8FF;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 0.95rem;
+      color: var(--gray-900);
+    }
+
+    .form-input:focus,
+    .form-textarea:focus {
+      outline: none;
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(26, 62, 255, 0.1);
+    }
+
+    .form-textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+  </style>
+</head>
+<body>
+<div id="app">
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div class="top-bar-title">Employer Dashboard</div>
+    <button class="btn-primary">
+      <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <path d="M12 5v14M5 12h14" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Post a New Job
+    </button>
+  </div>
+
+  <!-- Main Content -->
+  <main>
+    <!-- Stats Section -->
+    <div class="section-header">
+      <h2 class="section-title">Dashboard Overview</h2>
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon" style="background: #DDE2FF;">
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="var(--blue)" stroke-width="2">
+            <path d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="stat-label">Active Mines</div>
+        <div class="stat-value">12</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="background: #E0F2FE;">
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="#0284C7" stroke-width="2">
+            <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="stat-label">Total Applicants</div>
+        <div class="stat-value">248</div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon" style="background: #DCFCE7;">
+          <svg width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="var(--green)" stroke-width="2">
+            <path d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="stat-label">Top Matches</div>
+        <div class="stat-value">42</div>
+      </div>
+    </div>
+
+    <!-- Talent Pipeline Section -->
+    <div class="section-header" style="margin-top: 32px;">
+      <h3 class="section-title">Candidate Pipeline</h3>
+      <span style="color:var(--gray-400); font-size: 0.9rem;"><span id="selectedCount">0</span> selected</span>
+    </div>
+
+    <!-- Table -->
+    <div class="pipeline-table">
+      <table>
+        <thead>
+          <tr>
+            <th>
+              <input type="checkbox" class="custom-checkbox" id="selectAll" onchange="toggleSelectAll()" />
+            </th>
+            <th>Candidate</th>
+            <th>Job Applied For</th>
+            <th>Skill Match</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody">
+          <!-- Rows will be inserted here -->
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>
+
+<!-- Bulk Actions Bar -->
+<div id="bulkActionsBar" class="bulk-actions-bar">
+  <span style="color:var(--gray-900); font-weight: 600; font-size: 0.9rem;"><span id="bulkSelectedCount">0</span> candidate(s) selected</span>
+  <button class="btn-primary" onclick="openComposeModal()">
+    <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    Bulk Message
+  </button>
+  <button class="btn-secondary" onclick="clearSelection()">Clear Selection</button>
+</div>
+
+<!-- Compose Email Modal -->
+<div id="composeModal" class="modal-overlay">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 style="font-size: 1.1rem; font-weight: 700; color: #111;">Compose Email</h3>
+      <button class="close-btn" onclick="closeComposeModal()">
+        <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div style="margin-bottom: 20px;">
+        <label class="form-label">Recipients</label>
+        <div style="color:var(--gray-600); font-size: 0.9rem;" id="recipientsList">Loading...</div>
+      </div>
+      <div style="margin-bottom: 20px;">
+        <label class="form-label">Subject</label>
+        <input type="text" class="form-input" id="emailSubject" placeholder="Enter email subject" />
+      </div>
+      <div style="margin-bottom: 20px;">
+        <label class="form-label">Message</label>
+        <textarea class="form-textarea" id="emailMessage" placeholder="Write your message here..."></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" onclick="closeComposeModal()">Cancel</button>
+      <button class="btn-primary" onclick="sendBulkEmail()">Send Email</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const candidates = [
+    { id: 1, name: 'Sarah Johnson', avatar: 'SJ', color: '#10B981', job: 'Senior Frontend Developer', skillMatch: 94, status: 'interview' },
+    { id: 2, name: 'Michael Chen', avatar: 'MC', color: '#3B82F6', job: 'Full Stack Engineer', skillMatch: 89, status: 'screening' },
+    { id: 3, name: 'Emily Rodriguez', avatar: 'ER', color: '#8B5CF6', job: 'UI/UX Designer', skillMatch: 91, status: 'hired' },
+    { id: 4, name: 'James Wilson', avatar: 'JW', color: '#F59E0B', job: 'Backend Developer', skillMatch: 87, status: 'interview' },
+    { id: 5, name: 'Lisa Anderson', avatar: 'LA', color: '#EC4899', job: 'Product Manager', skillMatch: 82, status: 'screening' },
+    { id: 6, name: 'David Kim', avatar: 'DK', color: '#06B6D4', job: 'DevOps Engineer', skillMatch: 95, status: 'hired' },
+    { id: 7, name: 'Anna Martinez', avatar: 'AM', color: '#EF4444', job: 'Data Analyst', skillMatch: 78, status: 'rejected' },
+    { id: 8, name: 'Robert Taylor', avatar: 'RT', color: '#14B8A6', job: 'Mobile Developer', skillMatch: 92, status: 'interview' },
+    { id: 9, name: 'Jennifer Lee', avatar: 'JL', color: '#F97316', job: 'Software Architect', skillMatch: 96, status: 'hired' },
+    { id: 10, name: 'Thomas Brown', avatar: 'TB', color: '#6366F1', job: 'QA Engineer', skillMatch: 85, status: 'screening' },
+  ];
+
+  let selectedCandidates = new Set();
+
+  function renderTable() {
+    const tableBody = document.getElementById('tableBody');
+    tableBody.innerHTML = candidates.map(candidate => {
+      const statusClass = `status-${candidate.status}`;
+      const statusText = candidate.status.charAt(0).toUpperCase() + candidate.status.slice(1);
+      
+      return `
+        <tr data-id="${candidate.id}">
+          <td>
+            <input type="checkbox" class="custom-checkbox candidate-checkbox" data-id="${candidate.id}" onchange="toggleCandidate(${candidate.id})" />
+          </td>
+          <td>
+            <div class="candidate-info">
+              <div class="avatar" style="background:${candidate.color}">${candidate.avatar}</div>
+              <span class="candidate-name">${candidate.name}</span>
+            </div>
+          </td>
+          <td style="color:var(--gray-600);">${candidate.job}</td>
+          <td>
+            <span class="skill-badge">${candidate.skillMatch}%</span>
+          </td>
+          <td>
+            <span class="status-badge ${statusClass}">${statusText}</span>
+          </td>
+        </tr>
+      `;
+    }).join('');
+  }
+
+  function toggleCandidate(id) {
+    const row = document.querySelector(`tr[data-id="${id}"]`);
+    const checkbox = document.querySelector(`.candidate-checkbox[data-id="${id}"]`);
+    
+    if (checkbox.checked) {
+      selectedCandidates.add(id);
+      row.classList.add('selected');
+    } else {
+      selectedCandidates.delete(id);
+      row.classList.remove('selected');
+    }
+
+    updateSelectAllCheckbox();
+    updateSelectedCount();
+  }
+
+  function toggleSelectAll() {
+    const selectAllCheckbox = document.getElementById('selectAll');
+    const checkboxes = document.querySelectorAll('.candidate-checkbox');
+    
+    selectedCandidates.clear();
+    
+    checkboxes.forEach(checkbox => {
+      checkbox.checked = selectAllCheckbox.checked;
+      if (selectAllCheckbox.checked) {
+        selectedCandidates.add(parseInt(checkbox.getAttribute('data-id')));
+      }
+    });
+
+    document.querySelectorAll('tbody tr').forEach(row => {
+      if (selectAllCheckbox.checked) {
+        row.classList.add('selected');
+      } else {
+        row.classList.remove('selected');
+      }
+    });
+
+    updateSelectedCount();
+  }
+
+  function updateSelectAllCheckbox() {
+    const selectAllCheckbox = document.getElementById('selectAll');
+    const totalCandidates = candidates.length;
+    selectAllCheckbox.checked = selectedCandidates.size === totalCandidates;
+  }
+
+  function updateSelectedCount() {
+    document.getElementById('selectedCount').textContent = selectedCandidates.size;
+    document.getElementById('bulkSelectedCount').textContent = selectedCandidates.size;
+    
+    const bulkActionsBar = document.getElementById('bulkActionsBar');
+    if (selectedCandidates.size > 0) {
+      bulkActionsBar.classList.add('active');
+    } else {
+      bulkActionsBar.classList.remove('active');
+    }
+  }
+
+  function clearSelection() {
+    selectedCandidates.clear();
+    document.querySelectorAll('.candidate-checkbox').forEach(checkbox => {
+      checkbox.checked = false;
+    });
+    document.querySelectorAll('tbody tr').forEach(row => {
+      row.classList.remove('selected');
+    });
+    document.getElementById('selectAll').checked = false;
+    updateSelectedCount();
+  }
+
+  function openComposeModal() {
+    const modal = document.getElementById('composeModal');
+    const recipientsList = document.getElementById('recipientsList');
+    
+    const selectedNames = candidates
+      .filter(c => selectedCandidates.has(c.id))
+      .map(c => c.name)
+      .join(', ');
+    
+    recipientsList.textContent = selectedNames || 'No candidates selected';
+    modal.classList.add('active');
+  }
+
+  function closeComposeModal() {
+    document.getElementById('composeModal').classList.remove('active');
+    document.getElementById('emailSubject').value = '';
+    document.getElementById('emailMessage').value = '';
+  }
+
+  function sendBulkEmail() {
+    const subject = document.getElementById('emailSubject').value;
+    const message = document.getElementById('emailMessage').value;
+    
+    if (!subject || !message) {
+      alert('Please fill in both subject and message');
+      return;
+    }
+
+    alert(`Email sent to ${selectedCandidates.size} candidate(s)!`);
+    closeComposeModal();
+    clearSelection();
+  }
+
+  // Initialize
+  renderTable();
+</script>
+</body>
+</html>

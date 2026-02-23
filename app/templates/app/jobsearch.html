@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Job Miner - Find Your Perfect Job</title>
-  <script src="{% static 'src/tailwind.js' %}" defer></script>
+  <script src="{% static 'src/tailwind.js' %}"></script>
   <script src="{% static 'src/alpine.js' %}"></script>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
@@ -74,7 +74,7 @@
         </button>
 
         <nav id="desktopNav" class="hidden md:flex items-center space-x-8">
-          <a href="#Recent" class="nav-link text-gray-700 hover:text-blue-600 transition-colors">Recent jobs</a>
+          <a href="{% url 'home' %}#Recent" class="nav-link text-gray-700 hover:text-blue-600 transition-colors">Recent jobs</a>
           <a href="{% url 'jobsearch' %}" class="nav-link text-gray-700 hover:text-blue-600 transition-colors">Find jobs</a>
           <a href="#post" class="nav-link text-gray-700 hover:text-blue-600 transition-colors">Post Jobs</a>
           <a href="#dashboard" class="nav-link text-gray-700 hover:text-blue-600 transition-colors">Dashboard</a>
@@ -93,7 +93,7 @@
       <!-- Mobile nav (hidden by default) -->
       <nav id="mobileNav" class="md:hidden mt-3 hidden">
         <div class="flex flex-col space-y-2">
-          <a href="#Recent" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50">Recent jobs</a>
+          <a href="{% url 'home' %}#Recent" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50">Recent jobs</a>
           <a href="{% url 'jobsearch' %}" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50">Find jobs</a>
           <a href="#post" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50">Post Jobs</a>
           <a href="#dashboard" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50">Dashboard</a>
@@ -192,6 +192,50 @@
                   />
                   <span class="text-sm md:text-base text-gray-900">
                     Intern
+                  </span>
+                </label>
+              </div>
+            </div>
+           <!-- Location -->
+            <div class="mb-6 md:mb-8">
+              <h4 class="text-base sm:text-lg md:text-lg text-gray-900 mb-3 md:mb-4 font-medium">
+                Location
+              </h4>
+              <div class="border-t border-gray-200 pt-4 space-y-3">
+                <label class="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded transition-colors">
+                  <input
+                    type="checkbox"
+                    id="chk-fulltime"
+                    value="Onsite"
+                    class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-600"
+                    onchange="applyFilters()"
+                  />
+                  <span class="text-sm md:text-base text-gray-900">
+                    Onsite
+                  </span>
+                </label>
+                <label class="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded transition-colors">
+                  <input
+                    type="checkbox"
+                    id="chk-parttime"
+                    value="Remote"
+                    class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-600"
+                    onchange="applyFilters()"
+                  />
+                  <span class="text-sm md:text-base text-gray-900">
+                    Remote
+                  </span>
+                </label>
+                <label class="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded transition-colors">
+                  <input
+                    type="checkbox"
+                    id="chk-intern"
+                    value="Hybrid"
+                    class="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-600"
+                    onchange="applyFilters()"
+                  />
+                  <span class="text-sm md:text-base text-gray-900">
+                    Hybrid
                   </span>
                 </label>
               </div>
@@ -462,7 +506,7 @@
             <span class="bg-blue-200 text-blue-800 px-3 md:px-4 py-1.5 rounded-full text-xs md:text-sm">${job.salaryLabel}</span>
           </div>
           
-          <a href="#" class="text-blue-600 hover:text-blue-700 font-medium text-sm md:text-base">View details</a>
+          <a href="{% url 'jobdetail' %}" class="text-blue-600 hover:text-blue-700 font-medium text-sm md:text-base">View details</a>
         `;
         list.appendChild(card);
       });

@@ -40,7 +40,7 @@ def jobsignin(request):
         new_user= user.objects.create_user(username=username,email=email,password=password,role="job seeker")
         new_user.save()
         jobseeker.objects.create(user=new_user,jobseeker_name=username,skills=skills,experience=experience,resume=resume)
-        return redirect("home")
+        return redirect("login")
        else:
          return render(request,'app/jobsignup.html',{"errormessage":"Passwords don't match"})
     return render(request, 'app/jobsignup.html')
@@ -65,7 +65,7 @@ def companysignin(request):
         new_user= user.objects.create_user(username=username,email=useremail,password=password,role="company")
         new_user.save()
         company.objects.create(user=new_user,about_company=about_company)
-        return redirect("home")
+        return redirect("login")
        else:
          return render(request,'app/postsignup.html',{"errormessage":"Passwords don't match"})
    
@@ -91,5 +91,8 @@ def jobSearch(request):
 def jobDetails(request):
    return render(request,'app/jobdetail.html')
 
-
+def jobSeekerdashboard(request):
+   return render(request,'app/jobseekerdashboard.html')
+def companydashboard(request):
+   return render(request,'app/companydashboard.html')
        
