@@ -7,9 +7,12 @@
   <title>{{ job.job_title }} — Job Miner</title>
   <script src="{% static 'src/alpine.js' %}" defer></script>
   <script src="{% static 'src/tailwind.js' %}"></script>
+  <script src="{% static 'src/axios.js' %}"></script>
 </head>
 <body class="min-h-screen bg-white text-gray-900">
-
+<!-- {{request.user.role}} -->
+{{request.user.role}}
+{{request.user.id}}
 <div x-data="{ isOpen: false }" class="relative">
     <div x-show="isOpen"
         x-transition:enter="transition duration-300 ease-out"
@@ -100,9 +103,12 @@
               <span class="bg-blue-200 text-blue-800 px-4 py-1.5 rounded-full text-sm">Posted {{ job.posted_date }}</span>
             </div>
           </div>
-          <a href="#" class="bg-blue-600 text-white px-10 py-3 rounded-full hover:bg-blue-700 transition-colors font-semibold self-start sm:self-center">
-            Apply Now
-          </a>
+         <button 
+         id="btn"
+         onclick="handleApply(event, {{ job.id }})"
+         class="bg-blue-600 text-white px-10 py-3 rounded-full hover:bg-blue-700 transition-colors font-semibold self-start sm:self-center">
+         Apply Now
+        </button>
         </div>
       </div>
     </div>
@@ -158,9 +164,12 @@
             {% endfor %}
           </div>
           <div class="mt-8 text-center">
-            <a href="#" class="inline-block w-full sm:w-auto bg-blue-600 text-white px-12 py-3 rounded-full hover:bg-blue-700 transition-colors font-semibold">
+            <button 
+              id="btn"
+              onclick="handleApply(event, {{ job.id }})"
+              class="bg-blue-600 text-white px-10 py-3 rounded-full hover:bg-blue-700 transition-colors font-semibold self-start sm:self-center">
               Apply Now
-            </a>
+          </button>
           </div>
         </div>
 
@@ -232,6 +241,63 @@
         mobileNav.classList.toggle('hidden');
       });
     }
+
+    function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== "") {
+    const cookies = document.cookie.split(";");
+    for (let cookie of cookies) {
+      cookie = cookie.trim();
+      if (cookie.startsWith(name + "=")) {
+        // ✅ Fixed: was name.lenght (typo), now name.length
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
+function handleApply(event, jobId) {
+  event.preventDefault();
+  const btn = document.getElementById("btn");
+  btn.innerText = "Submitting...";
+  btn.disabled = true;
+
+  // ✅ Fixed: was using wrong variable 'token' instead of 'csrftoken'
+  const csrftoken = getCookie("csrftoken");
+
+  // ✅ Fixed: URL now uses the jobId parameter instead of hardcoded Django template tag
+  axios.post(`/apply/${jobId}/`, {}, {
+    headers: {
+      'X-CSRFToken': csrftoken
+    }
+  })
+  .then(response => {
+    if (response.data.status === 'success') {
+      btn.innerText = "Application Sent!";
+      btn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+      btn.classList.add('bg-green-500', 'cursor-not-allowed');
+      btn.disabled = true;
+    } else {
+      alert(response.data.message);
+      btn.innerText = "Apply Now";
+      btn.disabled = false;
+    }
+  })
+  .catch(error => {
+    console.error("Error applying:", error);
+    if (error.response?.status === 403) {
+      alert("You need a jobseeker profile to apply.");
+    } else if (error.response?.status === 401) {
+      alert("Please log in to apply.");
+    } else {
+      alert("Something went wrong. Please try again.");
+    }
+    btn.innerText = "Apply Now";
+    btn.disabled = false;
+  });
+}
   </script>
 
 </body>

@@ -10,6 +10,7 @@
   <script src="{% static 'src/alpine.js' %}" defer></script>
 </head>
 <body class="min-h-screen bg-white">
+  {{request.user.role}}
 <div x-data="{ isOpen: false }" class="relative ">
   
     <div x-show="isOpen" 
@@ -60,7 +61,7 @@
           <a href="#Recent" class="nav-link text-gray-700 hover:text-blue-600 transition-colors">Recent jobs</a>
           <a href="{% url 'jobsearch' %}" class="nav-link text-gray-700 hover:text-blue-600 transition-colors">Find jobs</a>
           <a href="#post" class="nav-link text-gray-700 hover:text-blue-600 transition-colors">Post Jobs</a>
-          <a href="#dashboard" class="nav-link text-gray-700 hover:text-blue-600 transition-colors">Dashboard</a>
+          <a href="{% url 'dashboard' %}" class="nav-link text-gray-700 hover:text-blue-600 transition-colors">Dashboard</a>
         </nav>
         <div>
             <a href="{% url 'login' %}"><button class="hidden sm:inline-block bg-blue-600 text-white px-4 sm:px-8 py-2.5 rounded-full hover:bg-blue-700 transition-colors">
@@ -79,7 +80,7 @@
           <a href="#Recent" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50">Recent jobs</a>
           <a href="{% url 'jobsearch' %}" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50">Find jobs</a>
           <a href="#post" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50">Post Jobs</a>
-          <a href="#dashboard" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50">Dashboard</a>
+          <a href="{% url 'dashboard' %}" class="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-50">Dashboard</a>
           <button @click="isOpen = true" class="sm:inline-block bg-blue-600 text-white px-4 sm:px-8 py-2.5 rounded-full hover:bg-blue-700 transition-colors w-70">
           Login
         </button>
@@ -159,6 +160,7 @@
     
     <div class="grid md:grid-cols-2 gap-6">
       <!-- Job Card 1 -->
+       {% for job in jobs %}
       <div class="border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-shadow">
         <div class="flex items-start gap-4 mb-4">
           <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
@@ -168,96 +170,22 @@
           </div>
           <div class="flex-1">
             <div class="flex items-center gap-3 mb-2">
-              <h3 class="text-lg md:text-xl font-bold text-gray-900">Jr. Web developer</h3>
+              <h3 class="text-lg md:text-xl font-bold text-gray-900">{{job.title}}</h3>
               <span class="bg-green-200 text-green-800 px-3 py-1 rounded-full text-sm font-medium">Active</span>
             </div>
-            <p class="text-gray-600">by Digimark Consulting</p>
+            <p class="text-gray-600">{{job.company}}</p>
           </div>
         </div>
         
         <div class="flex gap-2 mb-4">
-          <span class="bg-blue-200 text-blue-800 px-4 py-1.5 rounded-full text-sm">Remote</span>
-          <span class="bg-blue-200 text-blue-800 px-4 py-1.5 rounded-full text-sm">12000XAF-5000000XAF</span>
+          <span class="bg-blue-200 text-blue-800 px-4 py-1.5 rounded-full text-sm">{{job.type}}</span>
+          <span class="bg-blue-200 text-blue-800 px-4 py-1.5 rounded-full text-sm">{{ job.salaryMin|floatformat:0 }} – {{ job.salaryMax|floatformat:0 }}</span>
         </div>
         
-        <a href="{% url 'jobdetail' %}" class="text-blue-600 hover:text-blue-700 font-medium">View details</a>
+        <a href="{% url 'jobdetail' job.id %}" class="text-blue-600 hover:text-blue-700 font-medium">View details</a>
       </div>
 
-      <!-- Job Card 2 -->
-      <div class="border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-shadow">
-        <div class="flex items-start gap-4 mb-4">
-          <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
-            <svg class="w-6 h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12z"/>
-            </svg>
-          </div>
-          <div class="flex-1">
-            <div class="flex items-center gap-3 mb-2">
-              <h3 class="text-lg md:text-xl font-bold text-gray-900">Senior Backend Engineer</h3>
-              <span class="bg-green-200 text-green-800 px-3 py-1 rounded-full text-sm font-medium">Active</span>
-            </div>
-            <p class="text-gray-600">by TechStart Solutions</p>
-          </div>
-        </div>
-        
-        <div class="flex gap-2 mb-4">
-          <span class="bg-blue-200 text-blue-800 px-4 py-1.5 rounded-full text-sm">Hybrid</span>
-          <span class="bg-blue-200 text-blue-800 px-4 py-1.5 rounded-full text-sm">80000XAF-150000XAF</span>
-        </div>
-        
-        <a href="{% url 'jobdetail' %}" class="text-blue-600 hover:text-blue-700 font-medium">View details</a>
-      </div>
-
-      <!-- Job Card 3 -->
-      <div class="border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-shadow">
-        <div class="flex items-start gap-4 mb-4">
-          <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
-            <svg class="w-6 h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12z"/>
-            </svg>
-          </div>
-          <div class="flex-1">
-            <div class="flex items-center gap-3 mb-2">
-              <h3 class="text-lg md:text-xl font-bold text-gray-900">UI/UX Designer</h3>
-              <span class="bg-green-200 text-green-800 px-3 py-1 rounded-full text-sm font-medium">Active</span>
-            </div>
-            <p class="text-gray-600">by Creative Labs</p>
-          </div>
-        </div>
-        
-        <div class="flex gap-2 mb-4">
-          <span class="bg-blue-200 text-blue-800 px-4 py-1.5 rounded-full text-sm">On-site</span>
-          <span class="bg-blue-200 text-blue-800 px-4 py-1.5 rounded-full text-sm">50000XAF-90000XAF</span>
-        </div>
-        
-        <a href="{% url 'jobdetail' %}" class="text-blue-600 hover:text-blue-700 font-medium">View details</a>
-      </div>
-
-      <!-- Job Card 4 -->
-      <div class="border border-gray-200 rounded-2xl p-6 hover:shadow-lg transition-shadow">
-        <div class="flex items-start gap-4 mb-4">
-          <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
-            <svg class="w-6 h-6 text-red-600" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12z"/>
-            </svg>
-          </div>
-          <div class="flex-1">
-            <div class="flex items-center gap-3 mb-2">
-              <h3 class="text-lg md:text-xl font-bold text-gray-900">Data Analyst</h3>
-              <span class="bg-green-200 text-green-800 px-3 py-1 rounded-full text-sm font-medium">Active</span>
-            </div>
-            <p class="text-gray-600">by Analytics Pro</p>
-          </div>
-        </div>
-        
-        <div class="flex gap-2 mb-4">
-          <span class="bg-blue-200 text-blue-800 px-4 py-1.5 rounded-full text-sm">Remote</span>
-          <span class="bg-blue-200 text-blue-800 px-4 py-1.5 rounded-full text-sm">60000XAF-120000XAF</span>
-        </div>
-        
-        <a href="{% url 'jobdetail' %}" class="text-blue-600 hover:text-blue-700 font-medium">View details</a>
-      </div>
-    </div>
+     {% endfor %}
   </section>
 
   <!-- Footer -->

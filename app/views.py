@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate,login
 from django.contrib.auth.hashers import make_password
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render, redirect,get_object_or_404
 from app.models import jobseeker,user,company
 from django.http import HttpResponse,JsonResponse
@@ -12,7 +13,26 @@ from .models import job,application
 # Create your views here.
 
 def home(request):
-   return render(request,"app/index.html")
+   jobs = job.objects.select_related('company', 'company__user')[:4]
+   print(jobs)
+   for field in jobs.model._meta.fields:
+      print(field.name)
+   data = [
+            {
+                'id':          j.pk,
+                'title':       j.job_title,
+                'company':     j.company.user.username,
+                'type':        j.employment_type,
+                'salaryMin':   j.min_salary,
+                'salaryMax':   j.max_salary,
+                'experience':  j.experience_required,
+                'skills':      j.skills_required,
+                'posted_date': j.posted_date.strftime('%Y-%m-%d'),
+                'status':      'Active',
+            }
+            for j in jobs
+        ]   
+   return render(request,"app/index.html",{'jobs':data})
 
 def jobsignin(request):
     if request.method == "POST":
@@ -173,11 +193,6 @@ def jobDetails(request, job_id):
 
     return render(request, 'app/jobdetail.html', context)
 
-def jobSeekerdashboard(request):
-   return render(request,'app/jobseekerdashboard.html')
-def companydashboard(request):
-   return render(request,'app/companydashboard.html')
-
 @require_POST
 def createJob(request):
     try:
@@ -201,4 +216,152 @@ def createJob(request):
         return JsonResponse({'success': False, 'error': 'Company profile not found'}, status=404)
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=400)
-       
+
+@login_required   
+def dashboard_redirect(request):
+   user = request.user
+
+   if user.role == "job seeker":
+      return redirect('jobseeker_dashboard')
+   elif user.role == "company":
+      return redirect('company_dashboard')
+   else:
+      return redirect('login')  
+
+@login_required
+def jobseeker_dashboard(request):   
+    if request.user.role != "job seeker":
+        return redirect("login")
+    else:
+        seeker = get_object_or_404(jobseeker, user=request.user)
+
+    applications = application.objects.filter(
+        jobseeker=seeker
+    ).select_related('job', 'job__company', 'job__company__user')
+
+    total        = applications.count()
+    accepted     = applications.filter(status='accepted').count()
+    pending      = applications.filter(status='pending').count()
+    rejected     = applications.filter(status='rejected').count()
+    success_rate = round((accepted / total * 100)) if total > 0 else 0
+
+    # Exclude jobs already applied to
+    applied_job_ids = applications.values_list('job_id', flat=True)
+    available_jobs  = job.objects.select_related(
+        'company', 'company__user'
+    ).exclude(id__in=applied_job_ids)[:6]
+
+    context = {
+        'seeker':         seeker,
+        'applications':   applications,
+        'total':          total,
+        'accepted':       accepted,
+        'pending':        pending,
+        'rejected':       rejected,
+        'success_rate':   success_rate,
+        'available_jobs': available_jobs,
+    }
+
+    return render(request, 'app/jobseekerdashboard.html', context)
+
+@login_required
+def load_more_jobs(request):
+    offset = int(request.GET.get('offset', 0))
+    limit  = 6
+
+    try:
+        seeker          = jobseeker.objects.get(user=request.user)
+        applied_job_ids = application.objects.filter(
+            jobseeker=seeker
+        ).values_list('job_id', flat=True)
+    except jobseeker.DoesNotExist:
+        applied_job_ids = []
+
+    jobs = job.objects.select_related(
+        'company', 'company__user'
+    ).exclude(id__in=applied_job_ids)[offset:offset + limit]
+
+    total_available = job.objects.exclude(id__in=applied_job_ids).count()
+    has_more        = (offset + limit) < total_available
+
+    data = [
+        {
+            'id':              j.pk,
+            'job_title':       j.job_title,
+            'company':         j.company.user.username,
+            'employment_type': j.employment_type,
+            'min_salary':      j.min_salary,
+            'max_salary':      j.max_salary,
+            'posted_date':     j.posted_date.strftime('%Y-%m-%d'),
+        }
+        for j in jobs
+    ]
+
+    return JsonResponse({'jobs': data, 'has_more': has_more})
+
+@login_required
+def company_dashboard(request):
+    if request.user.role != "company":
+        return redirect("login")
+    try:
+        employer = company.objects.get(user=request.user)
+    except company.DoesNotExist:
+        return render(request, 'app/companydashboard.html', {
+            'employer':        None,
+            'active_jobs':     0,
+            'total_applicants': 0,
+            'total_jobs':      0,
+            'applications':    [],
+        })
+
+    # All jobs posted by this company
+    company_jobs = job.objects.filter(company=employer)
+
+    # All applications for those jobs
+    applications = application.objects.filter(
+        job__in=company_jobs
+    ).select_related(
+        'jobseeker',
+        'jobseeker__user',
+        'job'
+    )
+
+    active_jobs      = company_jobs.count()
+    total_applicants = applications.count()
+    total_jobs       = company_jobs.count()
+
+    context = {
+        'employer':          employer,
+        'active_jobs':       active_jobs,
+        'total_applicants':  total_applicants,
+        'total_jobs':        total_jobs,
+        'applications':      applications,
+    }
+
+    return render(request, 'app/companydashboard.html', context)
+ 
+@login_required
+@require_POST
+def apply_job(request, job_id):
+    try:
+        current_job = get_object_or_404(job, pk=job_id)
+        seeker = get_object_or_404(jobseeker, user=request.user)
+
+        # Check if already applied
+        if application.objects.filter(job=current_job, jobseeker=seeker).exists():
+            return JsonResponse({'status': 'error', 'message': 'You have already applied for this job'})
+
+        application.objects.create(
+            job=current_job,
+            jobseeker=seeker,
+        )
+
+        return JsonResponse({'status': 'success', 'message': 'Application submitted successfully'})
+
+    except jobseeker.DoesNotExist:
+        return JsonResponse({'status': 'error', 'message': 'You need a jobseeker profile to apply'}, status=403)
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+   
+
+        

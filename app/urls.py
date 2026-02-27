@@ -9,7 +9,10 @@ urlpatterns = [
     path('login/', views.loginuser, name='login'),
     path('jobsearch/', views.jobSearch, name='jobsearch'),
     path('jobs/<int:job_id>/', views.jobDetails, name='jobdetail'),
-    path('jobseekerdashboard/', views.jobSeekerdashboard, name='jobseekerdashboard'),
-    path('companydashboard/', views.companydashboard, name='companydashboard'),
     path('jobs/create/', views.createJob, name='createjob'),
+    path('apply/<int:job_id>/', views.apply_job, name='applyjob'),
+    path('dashboard/', views.dashboard_redirect, name='dashboard'),
+    path('dashboard/jobseeker', views.jobseeker_dashboard, name='jobseeker_dashboard'),
+    path('dashboard/jobs/more/', views.load_more_jobs, name='load_more_jobs'),
+    path('dashboard/company', views.company_dashboard, name='company_dashboard'),
 ]
